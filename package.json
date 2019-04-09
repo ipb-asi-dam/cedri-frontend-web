@@ -10,7 +10,7 @@
     "dev": "rescripts start",
     "heroku-postbuild": "yarn build",
     "lint:fix": "standard --fix | snazzy",
-    "start": "serve start",
+    "start": "serve -s build",
     "storybook": "start-storybook -p 9009 -s public",
     "test": "rescripts test",
     "test:coverage": "rescripts test --coverage"
