@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { hot } from 'react-hot-loader/root'
+import { hot } from 'react-hot-loader'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -23,4 +23,4 @@ const Root = () => (
   </>
 )
 
-export default hot(Root)
+export default hot(module)(Root)
