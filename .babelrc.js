@@ -8,6 +8,7 @@ const paths = {
 const alias = {
   src: paths.src,
   components: join(paths.src, 'components'),
+  contexts: join(paths.src, 'contexts'),
   config: join(paths.src, 'config'),
   layouts: join(paths.src, 'layouts'),
   pages: join(paths.src, 'pages'),
