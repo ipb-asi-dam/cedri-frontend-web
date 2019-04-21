@@ -1,38 +1,34 @@
 import React, { useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
 import ReactQuill from 'react-quill'
 
 import 'react-quill/dist/quill.snow.css'
 
-function TextEditor () {
-  const [text, handleChange] = useState('')
+function TextEditor ({ content }) {
+  const [text, handleChange] = useState(content)
   const handleEditorChange = useCallback((value) => handleChange(value))
 
   return (
-    <>
-      <ReactQuill
-        modules={{
-          toolbar: [
-            [{ 'header': [false, 1, 2, 3, 4, 5, 6] }],
-            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [
-              { list: 'ordered' },
-              { list: 'bullet' },
-              { indent: '-1' },
-              { indent: '+1' },
-              { align: 'right' },
-              { align: 'center' },
-              { align: 'justify' }
-            ],
-            ['link', 'image']
-          ]
-        }}
-        placeholder='Type here your text'
-        onChange={handleEditorChange}
-        value={text}
-      />
-      <div className='ql-editor' dangerouslySetInnerHTML={{ __html: text }} />
-    </>
+    <ReactQuill
+      modules={{
+        toolbar: [
+          ['bold', 'italic'],
+          ['link', 'image']
+        ]
+      }}
+      placeholder='Type here your text'
+      onChange={handleEditorChange}
+      value={text}
+    />
   )
+}
+
+TextEditor.defaultProps = {
+  content: ''
+}
+
+TextEditor.propTypes = {
+  content: PropTypes.string
 }
 
 export default TextEditor
