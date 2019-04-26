@@ -1,32 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import t from 'prop-types'
 import IconButton from '@material-ui/core/IconButton'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
-import withStyles from '@material-ui/core/styles/withStyles'
 
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
-const styles = {
-  menuItem: {
-    '& $icon': {
-      marginRight: 5
-    }
-  },
-  primary: {},
-  icon: {}
-}
+const menuItems = ['Edit', 'Delete']
 
-const menuItems = [
-  { text: 'Edit', icon: EditIcon },
-  { text: 'Delete', icon: DeleteIcon }
-]
-
-function MenuActions ({ classes }) {
+function MenuActions ({ handleOnEdit, handleOnDelete }) {
   const [anchorEl, setState] = useState(null)
   const open = Boolean(anchorEl)
 
@@ -49,12 +32,12 @@ function MenuActions ({ classes }) {
         onClose={handleClose}
       >
         {menuItems.map((item, key) => (
-          <MenuItem key={key} className={classes.menuItem}>
-            <ListItemIcon className={classes.icon}>
-              <item.icon />
-            </ListItemIcon>
+          <MenuItem
+            key={key}
+            onClick={item === 'Edit' ? handleOnEdit : handleOnDelete}
+          >
             <Typography variant='inherit'>
-              {item.text}
+              {item}
             </Typography>
           </MenuItem>
         ))}
@@ -63,8 +46,14 @@ function MenuActions ({ classes }) {
   )
 }
 
-MenuActions.propTypes = {
-  classes: t.object.isRequired
+MenuActions.defaultProps = {
+  handleOnEdit: () => window.alert('Edit'),
+  handleOnDelete: () => window.alert('Delete')
 }
 
-export default withStyles(styles)(MenuActions)
+MenuActions.propTypes = {
+  handleOnEdit: t.func.isRequired,
+  handleOnDelete: t.func.isRequired
+}
+
+export default MenuActions
