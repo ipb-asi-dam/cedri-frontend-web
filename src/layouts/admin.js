@@ -1,9 +1,8 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import t from 'prop-types'
-import classNames from 'classnames'
+import compose from 'recompose/compose'
 import { Switch, Route } from 'react-router-dom'
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
-import Grid from '@material-ui/core/Grid'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import withStyles from '@material-ui/core/styles/withStyles'
 import withWidth from '@material-ui/core/withWidth'
@@ -12,13 +11,19 @@ import withWidth from '@material-ui/core/withWidth'
 import Header from 'components/navbar'
 import Sidebar from 'components/sidebar'
 
-import routes from 'routes.js'
+import { dashboardRoutes, innerRoutes } from 'routes.js'
+
+const routes = [
+  ...dashboardRoutes,
+  ...innerRoutes
+]
 
 const switchRoutes = (
   <Switch>
     {routes.map(({ children }) =>
       children.map((prop, key) => (
         <Route
+          exact={!!prop.exact}
           path={prop.layout + prop.path}
           component={prop.component}
           key={key}
@@ -138,20 +143,16 @@ const styles = theme => ({
   },
   mainContent: {
     flex: 1,
-    padding: '48px 36px 0',
-    background: '#eaeff1'
-  },
-  positionFixed: {
-    marginTop: theme.spacing.unit * 3
-  },
-  positionStatic: {
-    paddingTop: theme.spacing.unit * 3
+    padding: '20px 20px 0',
+    background: '#eaeff1',
+    paddingTop: theme.spacing.unit * 12
   }
 })
 
 const smallDevicesBreakpoints = ['xs', 'sm']
 
 function AdminLayout ({ classes, width }) {
+  const [currentRoute, setRoute] = useState({ name: 'Home' })
   const [mobileOpen, toggleDrawer] = useState(false)
   const [smDown, updateBreakpoint] = useState(smallDevicesBreakpoints.includes(width))
 
@@ -164,41 +165,35 @@ function AdminLayout ({ classes, width }) {
     }
   }, [width])
 
-  const handleRouteChange = useCallback(() => {
+  const handleRouteChange = useCallback((name) => () => {
     handleDrawerToggle()
     window.scrollTo(0, 0)
+    setRoute({ name })
   })
 
   return (
     <MuiThemeProvider theme={theme}>
-      <Grid container className={classes.root}>
-        <Grid item>
-          <nav className={classes.drawer}>
-            <Sidebar
-              onClose={handleDrawerToggle}
-              onChangeRoute={handleRouteChange}
-              open={mobileOpen}
-              PaperProps={{ style: { width: drawerWidth } }}
-              routes={routes}
-              smDown={smDown}
-            />
-          </nav>
-        </Grid>
-        <Grid item xs={12} className={classes.appContent}>
+      <div className={classes.root}>
+        <Sidebar
+          className={classes.drawer}
+          onClose={handleDrawerToggle}
+          onChangeRoute={handleRouteChange}
+          open={mobileOpen}
+          PaperProps={{ style: { width: drawerWidth } }}
+          routes={dashboardRoutes}
+          smDown={smDown}
+        />
+        <div className={classes.appContent}>
           <Header
             onDrawerToggle={handleDrawerToggle}
             smDown={smDown}
+            title={currentRoute.name}
           />
-          <main className={classNames(
-            classes.mainContent,
-            smDown
-              ? classes.positionFixed
-              : classes.positionStatic
-          )}>
+          <main className={classes.mainContent}>
             {switchRoutes}
           </main>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
     </MuiThemeProvider>
   )
 }
@@ -208,4 +203,7 @@ AdminLayout.propTypes = {
   width: t.string
 }
 
-export default withStyles(styles)(withWidth()(AdminLayout))
+export default compose(
+  withStyles(styles),
+  withWidth()
+)(AdminLayout)
