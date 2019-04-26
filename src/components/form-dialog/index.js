@@ -14,6 +14,9 @@ const styles = {
   appBar: {
     position: 'relative'
   },
+  content: {
+    padding: 20
+  },
   flex: {
     flex: 1
   },
@@ -38,7 +41,7 @@ const FormDialog = ({
     open={showDialog}
     onClose={handleToggleDialog}
     TransitionComponent={Transition}>
-    <AppBar className={classes.appBar}>
+    <AppBar className={classes.appBar} elevation={0}>
       <Toolbar>
         <IconButton color='inherit' onClick={handleToggleDialog} aria-label='Close'>
           <CloseIcon />
@@ -57,7 +60,9 @@ const FormDialog = ({
         </Button>
       </Toolbar>
     </AppBar>
-    {children}
+    <div className={classes.content}>
+      {children}
+    </div>
   </Dialog>
 )
 
