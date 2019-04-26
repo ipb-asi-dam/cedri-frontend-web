@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import t from 'prop-types'
-import Fab from '@material-ui/core/Fab'
 import withStyles from '@material-ui/core/styles/withStyles'
 import AddIcon from '@material-ui/icons/Add'
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 
+import Fab from 'components/fab'
 import FormDialog from 'components/form-dialog'
 import Table from 'components/table'
+import ThesesForm from 'pages/forms/theses'
 
 const tableHeader = [
   { id: 'name', numeric: false, disablePadding: false, label: 'Dessert (100g serving)' },
@@ -32,23 +32,6 @@ const tableData = [
 ]
 
 const styles = theme => ({
-  fab: {
-    bottom: 45,
-    margin: theme.spacing.unit,
-    marginBottom: 0,
-    position: 'fixed',
-    right: 24,
-    zIndex: 997
-  },
-  extendedIcon: {
-    marginRight: theme.spacing.unit
-  },
-  appBar: {
-    position: 'relative'
-  },
-  flex: {
-    flex: 1
-  },
   container: {
     display: 'flex',
     flexWrap: 'wrap'
@@ -61,62 +44,28 @@ const styles = theme => ({
 })
 
 function Dashboard ({ classes }) {
-  const [fields, setFieldState] = useState({ name: '', email: '', isValid: null })
   const [showDialog, toggleDialog] = useState(false)
 
-  const handleChange = useCallback((name) => (e) => {
-    setFieldState({ ...fields, [name]: e.target.value })
-  })
   const handleToggleDialog = useCallback(() => toggleDialog(!showDialog))
 
   return (
     <>
       <FormDialog
         handleToggleDialog={handleToggleDialog}
-        invalidForm={!!fields.isValid}
+        invalidForm
         mode='Save'
         showDialog={showDialog}
         title='Teste'
       >
-        <ValidatorForm
-          className={classes.container}
-          onError={errors => console.log(errors)}
-          onSubmit={() => {}}
-        >
-          <TextValidator
-            className={classes.textField}
-            errorMessages={['This field is required']}
-            label='Name'
-            margin='normal'
-            name='Name'
-            onChange={handleChange('name')}
-            value={fields.name}
-            validators={['required']}
-          />
-
-          <TextValidator
-            className={classes.textField}
-            errorMessages={['This field is required', 'Email is not valid']}
-            label='Email'
-            margin='normal'
-            name='Email'
-            onChange={handleChange('email')}
-            value={fields.email}
-            validators={['required', 'isEmail']}
-          />
-        </ValidatorForm>
+        <ThesesForm />
       </FormDialog>
 
       <Table header={tableHeader} rows={tableData} />
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Fab
-          aria-label='Add'
-          className={classes.fab}
-          color='primary'
-          onClick={handleToggleDialog}>
-          <AddIcon />
-        </Fab>
-      </div>
+      <Fab
+        ariaLlabel='Add'
+        InnerIcon={AddIcon}
+        onClick={handleToggleDialog}
+      />
     </>
   )
 }
