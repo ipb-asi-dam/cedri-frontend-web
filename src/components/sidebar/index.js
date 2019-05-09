@@ -77,58 +77,56 @@ function Sidebar ({ classes, onChangeRoute, routes, smDown, ...other }) {
   return (
     <nav>
       <Drawer variant={smDown ? 'temporary' : 'permanent'} {...other}>
-        <>
-          <List disablePadding>
-            <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
-              CeDRI
-            </ListItem>
-          </List>
-          <List>
-            {routes.map(({ id, children }) => (
-              <React.Fragment key={id}>
-                <ListItem key={id}
-                  className={classNames(classes.categoryHeader)}
-                  disableGutters
-                  onClick={collapseMenu(id)}
-                >
-                  <ListItemText classes={{ primary: classes.categoryHeaderPrimary }}>
-                    {id}
-                  </ListItemText>
-                </ListItem>
-                <Collapse
-                  classes={{ wrapperInner: classes.wrapperInner }}
-                  in={id === menuOpen}
-                  timeout='auto'
-                  unmountOnExit
-                >
-                  {children.map(({ icon: Icon, layout, name, path }) => (
-                    <ListItem key={path}
-                      className={classNames(
-                        classes.item,
-                        classes.itemActionable
-                      )}
-                      onClick={onChangeRoute(name)}
-                    >
-                      <ListItemIcon>
-                        <Icon />
-                      </ListItemIcon>
-                      <ListItemText
-                        classes={{
-                          primary: classes.itemPrimary,
-                          textDense: classes.textDense
-                        }}>
-                        <Link className={classes.link} to={layout + path}>
-                          {name}
-                        </Link>
-                      </ListItemText>
-                    </ListItem>
-                  ))}
-                </Collapse>
-                <Divider className={classes.divider} />
-              </React.Fragment>
-            ))}
-          </List>
-        </>
+        <List disablePadding>
+          <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
+            CeDRI
+          </ListItem>
+        </List>
+        <List>
+          {routes.map(({ id, children }) => children.length > 0 && (
+            <React.Fragment key={id}>
+              <ListItem
+                className={classNames(classes.categoryHeader)}
+                disableGutters
+                onClick={collapseMenu(id)}
+              >
+                <ListItemText classes={{ primary: classes.categoryHeaderPrimary }}>
+                  {id}
+                </ListItemText>
+              </ListItem>
+              <Collapse
+                classes={{ wrapperInner: classes.wrapperInner }}
+                in={id === menuOpen}
+                timeout='auto'
+                unmountOnExit
+              >
+                {children.map(route => (
+                  <ListItem key={route.path}
+                    className={classNames(
+                      classes.item,
+                      classes.itemActionable
+                    )}
+                    onClick={onChangeRoute(route.name)}
+                  >
+                    <ListItemIcon>
+                      <route.icon />
+                    </ListItemIcon>
+                    <ListItemText
+                      classes={{
+                        primary: classes.itemPrimary,
+                        textDense: classes.textDense
+                      }}>
+                      <Link className={classes.link} to={route.layout + route.path}>
+                        {route.name}
+                      </Link>
+                    </ListItemText>
+                  </ListItem>
+                ))}
+              </Collapse>
+              <Divider className={classes.divider} />
+            </React.Fragment>
+          ))}
+        </List>
       </Drawer>
     </nav>
   )
