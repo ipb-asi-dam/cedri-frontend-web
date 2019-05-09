@@ -5,7 +5,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 
 import { AuthContext } from 'contexts/auth'
 
-const Admin = lazy(() => import('layouts/admin/'))
+const Admin = lazy(() => import('layouts/admin'))
 const MainPage = lazy(() => import('pages/main'))
 const LoginPage = lazy(() => import('pages/login'))
 
