@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import t from 'prop-types'
 import compose from 'recompose/compose'
 import { Switch, Route } from 'react-router-dom'
@@ -11,27 +11,36 @@ import withWidth from '@material-ui/core/withWidth'
 import Header from 'components/navbar'
 import Sidebar from 'components/sidebar'
 
+// contexts
+import { AuthContext } from 'contexts/auth'
+
 import { dashboardRoutes, innerRoutes } from 'routes.js'
 
-const routes = [
-  ...dashboardRoutes,
-  ...innerRoutes
-]
+function SwitchRoutes () {
+  const { userInfo } = useContext(AuthContext)
+  const routes = [
+    ...dashboardRoutes,
+    ...innerRoutes
+  ]
 
-const switchRoutes = (
-  <Switch>
-    {routes.map(({ children }) =>
-      children.map((prop, key) => (
-        <Route
-          exact={!!prop.exact}
-          path={prop.layout + prop.path}
-          component={prop.component}
-          key={key}
-        />
-      ))
-    )}
-  </Switch>
-)
+  return (
+    <Switch>
+      {routes.map(({ children }) =>
+        children
+          .filter(({ onlyAdmin }) => !onlyAdmin || (onlyAdmin && userInfo.user.isAdmin))
+          .map((prop, key) => (
+            <Route
+              exact
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          ))
+      )}
+      <Route component={() => <h1>404</h1>} />
+    </Switch>
+  )
+}
 
 let theme = createMuiTheme({
   typography: {
@@ -152,6 +161,8 @@ const styles = theme => ({
 const smallDevicesBreakpoints = ['xs', 'sm']
 
 function AdminLayout ({ classes, width }) {
+  const { userInfo, logout } = useContext(AuthContext)
+  const [filteredRoutes, setRoutes] = useState(dashboardRoutes)
   const [currentRoute, setRoute] = useState({ name: 'Home' })
   const [mobileOpen, toggleDrawer] = useState(false)
   const [smDown, updateBreakpoint] = useState(smallDevicesBreakpoints.includes(width))
@@ -164,6 +175,16 @@ function AdminLayout ({ classes, width }) {
       handleDrawerToggle()
     }
   }, [width])
+
+  useEffect(() => {
+    setRoutes(dashboardRoutes
+      .map(({ children, ...props }) => ({
+        ...props,
+        children: children
+          .filter(({ onlyAdmin }) => !onlyAdmin || (onlyAdmin && userInfo.user.isAdmin))
+      }))
+    )
+  }, [userInfo])
 
   const handleRouteChange = useCallback((name) => () => {
     handleDrawerToggle()
@@ -180,17 +201,19 @@ function AdminLayout ({ classes, width }) {
           onChangeRoute={handleRouteChange}
           open={mobileOpen}
           PaperProps={{ style: { width: drawerWidth } }}
-          routes={dashboardRoutes}
+          routes={filteredRoutes}
           smDown={smDown}
         />
         <div className={classes.appContent}>
           <Header
+            handleLogout={logout}
             onDrawerToggle={handleDrawerToggle}
             smDown={smDown}
             title={currentRoute.name}
+            userInfo={userInfo}
           />
           <main className={classes.mainContent}>
-            {switchRoutes}
+            <SwitchRoutes />
           </main>
         </div>
       </div>
