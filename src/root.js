@@ -1,26 +1,18 @@
-import React, { lazy, Suspense } from 'react'
+import React from 'react'
 import { hot } from 'react-hot-loader'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import LinearProgress from '@material-ui/core/LinearProgress'
 
-// core components
-const Admin = lazy(() => import('layouts/admin'))
-const MainPage = lazy(() => import('pages/main'))
+import App from './app'
+import AuthProvider from 'contexts/auth'
 
 const Root = () => (
-  <>
+  <AuthProvider>
     <CssBaseline />
     <BrowserRouter>
-      <Suspense fallback={<LinearProgress />} >
-        <Switch>
-          <Route exact path='/' component={MainPage} />
-          <Route path='/admin' component={Admin} />
-          <Route component={() => <p>404</p>} />
-        </Switch>
-      </Suspense>
+      <Route component={App} />
     </BrowserRouter>
-  </>
+  </AuthProvider>
 )
 
 export default hot(module)(Root)
