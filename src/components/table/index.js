@@ -57,7 +57,7 @@ class CustomTable extends Component {
   handleChangePage = (page) => () => this.setState({ page })
 
   handleChangeRowsPerPage = event => {
-    this.setState({ page: 0, rowsPerPage: event.target.value })
+    this.setState({ page: 0, rowsPerPage: +event.target.value })
   }
 
   render () {

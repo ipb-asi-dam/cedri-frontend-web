@@ -15,7 +15,7 @@ const styles = theme => ({
   }
 })
 
-function TablePaginationActions ({ classes, count, onChangePage, page, rowsPerPage, theme }) {
+function TablePaginationActions ({ classes, count, onChangePage, page, rowsPerPage }) {
   const handleFirstPageButtonClick = useCallback(onChangePage(0))
 
   const handleBackButtonClick = useCallback(onChangePage(page - 1))
@@ -65,8 +65,7 @@ TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  theme: PropTypes.object.isRequired
+  rowsPerPage: PropTypes.number.isRequired
 }
 
 const TablePaginationActionsWrapped = withStyles(styles, { withTheme: true })(
