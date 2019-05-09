@@ -6,10 +6,12 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "src/*": ["./src/*"],
+      "contexts/*": ["./src/contexts/*"],
       "components/*": ["./src/components/*"],
       "config/*": ["./src/config/*"],
       "pages/*": ["./src/pages/*"],
       "reducers/*": ["./src/redux-flow/reducers/*"],
+      "services/*": ["./src/services/*"],
       "utils/*": ["./src/utils/*"]
     },
   },

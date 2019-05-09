@@ -13,6 +13,7 @@ const alias = {
   layouts: join(paths.src, 'layouts'),
   pages: join(paths.src, 'pages'),
   reducers: join(paths.src, 'redux-flow', 'reducers'),
+  services: join(paths.src, 'services'),
   utils: join(paths.src, 'utils')
 }
 

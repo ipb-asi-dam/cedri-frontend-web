@@ -74,7 +74,8 @@
     "globals": [
       "fetch",
       "it",
-      "expect"
+      "expect",
+      "localStorage"
     ]
   },
   "browserslist": [
