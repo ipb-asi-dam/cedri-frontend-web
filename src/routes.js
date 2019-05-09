@@ -24,47 +24,53 @@ export const dashboardRoutes = [
     id: 'Overview',
     children: [
       {
-        path: '/dashboard',
+        path: '/',
         name: 'Dashboard',
         icon: Dashboard,
         component: DashboardPage,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/people',
         name: 'People',
         icon: Group,
         component: PeoplePage,
-        layout: '/admin',
-        exact: true
+        layout: '/dashboard',
+        exact: true,
+        onlyAdmin: true
       },
       {
         path: '/software',
         name: 'Software',
         icon: Description,
         component: SoftwareForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/theses',
         name: 'Theses',
         icon: Description,
         component: ThesesForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/awards',
         name: 'Awards',
         icon: Description,
         component: AwardsForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/patents',
         name: 'Patents',
         icon: Description,
         component: PatentForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       }
     ]
   },
@@ -76,42 +82,48 @@ export const dashboardRoutes = [
         name: 'Publications',
         icon: Description,
         component: PublicationsPage,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/journals',
         name: 'Journals',
         icon: Description,
         component: JournalForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/books',
         name: 'Books',
         icon: Description,
         component: BookForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/book-chapter',
         name: 'Book Chapter',
         icon: Description,
         component: BookChapterForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/editorial',
         name: 'Editorial',
         icon: Description,
         component: EditorialForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       },
       {
         path: '/proceeding',
         name: 'Proceeding',
         icon: Description,
         component: ProceedingForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: false
       }
     ]
   },
@@ -123,21 +135,24 @@ export const dashboardRoutes = [
         name: 'Events',
         icon: Description,
         component: EventForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: true
       },
       {
         path: '/news',
         name: 'News',
         icon: Description,
         component: NewsForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: true
       },
       {
         path: '/media',
         name: 'Media',
         icon: Description,
         component: MediaForm,
-        layout: '/admin'
+        layout: '/dashboard',
+        onlyAdmin: true
       }
     ]
   }
@@ -147,6 +162,7 @@ export const innerRoutes = [{
   children: [{
     path: '/people/:id',
     component: PeopleDetailPage,
-    layout: '/admin'
+    layout: '/dashboard',
+    onlyAdmin: true
   }]
 }]
