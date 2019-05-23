@@ -13,8 +13,8 @@ function MenuActions ({ handleOnEdit, handleOnDelete }) {
   const [anchorEl, setState] = useState(null)
   const open = Boolean(anchorEl)
 
-  const handleClick = useCallback(e => setState(e.currentTarget))
-  const handleClose = useCallback(() => setState(null))
+  const handleClick = useCallback(e => setState(e.currentTarget), [])
+  const handleClose = useCallback(() => setState(null), [])
 
   return (
     <>

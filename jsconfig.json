@@ -1,19 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src",
     "target": "es2015",
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "src/*": ["./src/*"],
       "contexts/*": ["./src/contexts/*"],
       "components/*": ["./src/components/*"],
       "config/*": ["./src/config/*"],
       "pages/*": ["./src/pages/*"],
       "reducers/*": ["./src/redux-flow/reducers/*"],
       "services/*": ["./src/services/*"],
+      "theme/*": ["./src/theme/*"],
       "utils/*": ["./src/utils/*"]
-    },
+    }
   },
+  "include": ["src"],
   "exclude": ["build", "node_modules", "coverage"]
 }

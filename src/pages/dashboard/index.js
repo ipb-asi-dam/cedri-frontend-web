@@ -1,77 +1,110 @@
-import React, { useCallback, useState } from 'react'
-import t from 'prop-types'
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+
+// Material UI components
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
-import AddIcon from '@material-ui/icons/Add'
+import TableRow from '@material-ui/core/TableRow'
 
-import Fab from 'components/fab'
-import FormDialog from 'components/form-dialog'
+// custom components
 import Table from 'components/table'
-import ThesesForm from 'pages/forms/theses'
+import TableCell from 'components/table/table-cell'
 
-const tableHeader = [
-  { id: 'name', numeric: false, disablePadding: false, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'actions', numeric: false, disablePadding: false, label: 'Actions' }
+const header = [
+  { id: 'title', label: 'Title' },
+  { id: 'author_name', label: 'Author' },
+  { id: 'type', label: 'Type' },
+  { id: 'created_at', label: 'Date' }
 ]
 
-const tableData = [
-  { name: 'Cupcake', calories: 305, fat: 3.7 },
-  { name: 'Donut', calories: 452, fat: 25.0 },
-  { name: 'Eclair', calories: 262, fat: 16.0 },
-  { name: 'Frozen yoghurt', calories: 159, fat: 6.0 },
-  { name: 'Gingerbread', calories: 356, fat: 16.0 },
-  { name: 'Honeycomb', calories: 408, fat: 3.2 },
-  { name: 'Ice cream sandwich', calories: 237, fat: 9.0 },
-  { name: 'Jelly Bean', calories: 375, fat: 0.0 },
-  { name: 'KitKat', calories: 518, fat: 26.0 },
-  { name: 'Lollipop', calories: 392, fat: 0.2 },
-  { name: 'Marshmallow', calories: 318, fat: 0 },
-  { name: 'Nougat', calories: 360, fat: 19.0 },
-  { name: 'Oreo', calories: 437, fat: 18.0 }
-]
+function renderRow ({
+  id,
+  author_id: authorId,
+  author_name: authorName,
+  created_at: createdAt,
+  title,
+  type
+}) {
+  const typeSlugged = type.split(' ').join('-')
+  return (
+    <TableRow key={id}>
+      <TableCell
+        dataType='link'
+        linkTo={`/${typeSlugged}/${id}`}
+        value={title}
+      />
+      <TableCell
+        dataType='link'
+        linkTo={`/authors/${authorId}`}
+        value={authorName}
+      />
+      <TableCell value={type} />
+      <TableCell dataType='date' value={createdAt} />
+    </TableRow>
+  )
+}
+
+renderRow.propTypes = {
+  id: PropTypes.number,
+  author_id: PropTypes.number,
+  author_name: PropTypes.string,
+  created_at: PropTypes.number,
+  title: PropTypes.string,
+  type: PropTypes.string
+}
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap'
+  root: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2)
   },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200
+  paper: {
+    borderRadius: 4
   }
 })
 
 function Dashboard ({ classes }) {
-  const [showDialog, toggleDialog] = useState(false)
+  const [tableData, setData] = useState([])
 
-  const handleToggleDialog = useCallback(() => toggleDialog(!showDialog))
+  useEffect(() => {
+    import('src/data/fake-data.json')
+      .then((data) => {
+        setData(data.default)
+      })
+  }, [])
 
   return (
-    <>
-      <FormDialog
-        handleToggleDialog={handleToggleDialog}
-        invalidForm
-        mode='Save'
-        showDialog={showDialog}
-        title='Teste'
-      >
-        <ThesesForm />
-      </FormDialog>
-
-      <Table header={tableHeader} rows={tableData} />
-      <Fab
-        ariaLlabel='Add'
-        InnerIcon={AddIcon}
-        onClick={handleToggleDialog}
-      />
-    </>
+    <Grid className={classes.root} container spacing={3}>
+      <Grid item xs={12} sm={6}>
+        <Paper className={classes.paper}>
+          <Typography component='p'>
+            Blá blá blá
+          </Typography>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Paper className={classes.paper}>
+          <Typography component='p'>
+            Blá blá blá
+          </Typography>
+        </Paper>
+      </Grid>
+      <Grid item xs={12}>
+        <Table
+          header={header}
+          renderRow={renderRow}
+          rowsData={tableData}
+        />
+      </Grid>
+    </Grid>
   )
 }
 
 Dashboard.propTypes = {
-  classes: t.object.isRequired
+  classes: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Dashboard)

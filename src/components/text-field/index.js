@@ -23,6 +23,7 @@ function RFTextField ({
       disabled={isSubmiting}
       label={title}
       value={value || ''}
+      variant='outlined'
       {...props}
     >
       {children}

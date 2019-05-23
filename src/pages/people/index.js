@@ -1,26 +1,17 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import withStyles from '@material-ui/core/styles/withStyles'
+import compose from 'recompose/compose'
 
-const styles = {
-  card: {
-    width: 220
-  },
-  cardTitle: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
-  },
-  media: {
-    height: 200
-  }
-}
+import Grid from '@material-ui/core/Grid'
+import List from '@material-ui/core/List'
+import withStyles from '@material-ui/core/styles/withStyles'
+import withWidth from '@material-ui/core/withWidth'
+import Zoom from '@material-ui/core/Zoom'
+
+import CardItem from './components/card-item'
+import MobileItem from './components/mobile-item'
+
+import styles from './styles'
 
 const people = [
   { id: 1, name: 'Ângela Ferreira', areaOfStudy: 'Electrical Engineering' },
@@ -31,48 +22,42 @@ const people = [
   { id: 6, name: 'José Gonçalves', areaOfStudy: 'Electrical Engineering' }
 ]
 
-function MediaCard ({ classes, history, location, ...props }) {
+function MediaCard ({ classes, history, location, width }) {
   const navigate = useCallback((id) => () => {
     history.push(`${location.pathname}/${id}`)
-  })
+  }, [history, location.pathname])
+
+  const isMobile = width === 'xs'
+  const props = isMobile ? { className: classes.root } : {}
+  const Wrapper = isMobile ? List : React.Fragment
 
   return (
-    <Grid container spacing={24}>
-      {people.map(({ id, name, areaOfStudy }) => (
-        <Grid
-          key={id}
-          item
-          container
-          justify='center'
-          xs={12}
-          sm={4}
-          md={3}
-          xl={2}
-        >
-          <Card className={classes.card}>
-            <CardActionArea onClick={navigate(id)}>
-              <CardMedia
-                className={classes.media}
-                image='//via.placeholder.com/220x200'
-                title={`${name} photo`}
+    <Grid container justify={isMobile ? 'center' : 'flex-start'} spacing={3}>
+      <Wrapper {...props}>
+        {people.map((person, index) => (
+          <Zoom key={person.id} in style={{ transitionDelay: `${index * 80}ms` }}>
+            {isMobile ? (
+              <MobileItem
+                classes={classes}
+                navigate={navigate}
+                {...person}
               />
-              <CardContent>
-                <Typography
-                  className={classes.cardTitle}
-                  component='h2'
-                  gutterBottom
-                  variant='h6'
-                >
-                  {name}
-                </Typography>
-                <Typography component='p'>
-                  {areaOfStudy}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
-      ))}
+            ) : (
+              <Grid
+                item
+                container
+                justify='center'
+                xs={12}
+                sm={4}
+                md={3}
+                xl={2}
+              >
+                <CardItem classes={classes} navigate={navigate} {...person} />
+              </Grid>
+            )}
+          </Zoom>
+        ))}
+      </Wrapper>
     </Grid>
   )
 }
@@ -80,7 +65,11 @@ function MediaCard ({ classes, history, location, ...props }) {
 MediaCard.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  width: PropTypes.string.isRequired
 }
 
-export default withStyles(styles)(MediaCard)
+export default compose(
+  withStyles(styles),
+  withWidth()
+)(MediaCard)

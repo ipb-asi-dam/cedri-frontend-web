@@ -5,9 +5,10 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 
 import { AuthContext } from 'contexts/auth'
 
-const Admin = lazy(() => import('layouts/admin'))
+const Dashboard = lazy(() => import('layouts/dashboard'))
 const MainPage = lazy(() => import('pages/main'))
 const LoginPage = lazy(() => import('pages/login'))
+const RecoverPage = lazy(() => import('pages/recover-password'))
 
 function PrivateRoute ({ component: Component, ...rest }) {
   const { userInfo } = useContext(AuthContext)
@@ -40,7 +41,8 @@ function App ({ location }) {
       <Switch>
         <Route exact path='/' component={MainPage} />
         <Route path='/login' component={LoginPage} />
-        <PrivateRoute path='/dashboard' component={Admin} />
+        <Route path='/recover-password' component={RecoverPage} />
+        <PrivateRoute path='/dashboard' component={Dashboard} />
         <Route component={() => <p>404</p>} />
       </Switch>
     </Suspense>

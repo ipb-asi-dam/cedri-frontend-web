@@ -8,7 +8,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 function Header ({ data, sort = false, onRequestSort, order, orderBy }) {
   const createSortHandler = useCallback(property => () => {
     onRequestSort(property)
-  })
+  }, [onRequestSort])
 
   return (
     <TableHead>
@@ -16,8 +16,7 @@ function Header ({ data, sort = false, onRequestSort, order, orderBy }) {
         {data.map(item => (
           <TableCell
             key={item.id}
-            align={item.numeric ? 'right' : 'left'}
-            padding={item.disablePadding ? 'none' : 'default'}
+            align='left'
             {...sort && { sortDirection: orderBy === item.id ? order : false }}
           >
             {sort && (

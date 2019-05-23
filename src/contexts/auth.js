@@ -1,8 +1,8 @@
 import React, { createContext, useCallback, useState } from 'react'
 import t from 'prop-types'
-
+import axios from 'config/axios'
 import {
-  getToken,
+  getTokenContent,
   isAuthenticated,
   login as loginService,
   logout as logoutService,
@@ -11,23 +11,23 @@ import {
 
 export const AuthContext = createContext()
 
-const fakeUser = {
-  name: 'user',
-  isAdmin: true
-}
-
 function Auth ({ children }) {
   const [userInfo, setUser] = useState({
-    user: JSON.parse(getToken()),
+    user: getTokenContent(),
     isAuthenticated: isAuthenticated()
   })
 
-  const login = useCallback(() => {
-    loginService(fakeUser)
-    setUser({
-      user: fakeUser,
-      isAuthenticated: isAuthenticated()
-    })
+  const login = useCallback(async (data) => {
+    try {
+      const res = await axios.post('/public/authenticate', data)
+      loginService(res.data.token)
+      setUser({
+        user: getTokenContent(),
+        isAuthenticated: isAuthenticated()
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }, [])
 
   const logout = useCallback(() => {

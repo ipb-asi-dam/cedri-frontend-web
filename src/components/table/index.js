@@ -3,32 +3,30 @@ import t from 'prop-types'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
 import TableFooter from '@material-ui/core/TableFooter'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import withStyles from '@material-ui/core/styles/withStyles'
 
+import TableCell from './table-cell'
 import TableHead from './header'
 import TablePaginationActions from './pagination'
+// import MenuActions from './menu-actions'
 
 import { getSorting, stableSort } from 'utils/sort'
-import MenuActions from './menu-actions'
 
-const styles = theme => ({
+const styles = {
   root: {
+    borderRadius: 4,
     width: '100%'
   },
   table: {
     minWidth: 500
   },
-  tableRow: {
-    cursor: 'pointer'
-  },
   tableWrapper: {
     overflowX: 'auto'
   }
-})
+}
 
 class CustomTable extends Component {
   state = {
@@ -36,11 +34,15 @@ class CustomTable extends Component {
     page: 0,
     rowsPerPage: 5,
     order: 'asc',
-    orderBy: 'calories'
+    orderBy: null
   }
 
   componentDidMount () {
-    this.setState({ rows: this.props.rows })
+    this.setState({ rows: this.props.rowsData })
+  }
+
+  componentWillReceiveProps (props) {
+    this.setState({ rows: props.rowsData })
   }
 
   handleRequestSort = (property) => {
@@ -61,7 +63,7 @@ class CustomTable extends Component {
   }
 
   render () {
-    const { header, classes } = this.props
+    const { classes, header, paginate, renderRow } = this.props
     const { order, orderBy, page, rows, rowsPerPage } = this.state
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
@@ -79,39 +81,30 @@ class CustomTable extends Component {
             <TableBody>
               {stableSort(rows, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, id) => (
-                  <TableRow className={classes.tableRow} hover key={id}>
-                    <TableCell component='th' scope='row'>
-                      {row.name}
-                    </TableCell>
-                    <TableCell align='right'>{row.calories}</TableCell>
-                    <TableCell align='right'>{row.fat}</TableCell>
-                    <TableCell align='center' style={{ width: 115 }} >
-                      <MenuActions />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                .map(renderRow)}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 48 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={3}
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{ native: true }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
+            {paginate && (
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    colSpan={3}
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{ native: true }}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableFooter>
+            )}
           </Table>
         </div>
       </Paper>
@@ -119,10 +112,16 @@ class CustomTable extends Component {
   }
 }
 
+CustomTable.defaultProps = {
+  paginate: false
+}
+
 CustomTable.propTypes = {
   classes: t.object.isRequired,
   header: t.array,
-  rows: t.array
+  paginate: t.bool,
+  renderRow: t.func.isRequired,
+  rowsData: t.array
 }
 
 export default withStyles(styles)(CustomTable)

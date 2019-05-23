@@ -29,9 +29,18 @@ export function checkDate (prev, current) {
   return inner
 }
 
-export function password (value) {
-  return value && !isLength(value, { min: 6, max: 32 })
-    ? 'Password must have at least 6 characters'
+export function strongPassword (value) {
+  const oneNumberRegex = new RegExp(/.*[0-9].*/)
+  const specialCharRegex = new RegExp(/.*[~!@#$%\\^&*()\-_=+|[{]};:'",<.>\/?].*/)
+
+  return matches(value, oneNumberRegex) && matches(value, specialCharRegex)
+    ? 'Password must have at least one number and a special character'
+    : null
+}
+
+export function passwordLength (value) {
+  return value && !isLength(value, { min: 8, max: 255 })
+    ? 'Password must have between 8 to 255 characters'
     : null
 }
 

@@ -1,0 +1,802 @@
+[
+	{
+		"id": 1,
+		"title": "enim, condimentum eget, volutpat",
+    "author_id": 1,
+    "author_name": "Ursula",
+		"created_at": 1552347144,
+		"type": "book chapter"
+	},
+	{
+		"id": 2,
+		"title": "turpis non enim.",
+    "author_id": 2,
+    "author_name": "Hakeem",
+		"created_at": 1576963032,
+		"type": "proceeding"
+	},
+	{
+		"id": 3,
+		"title": "porttitor vulputate, posuere",
+    "author_id": 3,
+    "author_name": "Emery",
+		"created_at": 1555217352,
+		"type": "book chapter"
+	},
+	{
+		"id": 4,
+		"title": "tempor lorem, eget mollis lectus",
+    "author_id": 4,
+    "author_name": "Griffin",
+		"created_at": 1578776714,
+		"type": "journal"
+	},
+	{
+		"id": 5,
+		"title": "Mauris eu turpis.",
+    "author_id": 5,
+    "author_name": "Hyacinth",
+		"created_at": 1565794505,
+		"type": "journal"
+	},
+	{
+		"id": 6,
+		"title": "magnis dis",
+    "author_id": 6,
+    "author_name": "Bradley",
+		"created_at": 1545646984,
+		"type": "editorial"
+	},
+	{
+		"id": 7,
+		"title": "dolor. Quisque tincidunt",
+    "author_id": 7,
+    "author_name": "Whoopi",
+		"created_at": 1556735583,
+		"type": "book"
+	},
+	{
+		"id": 8,
+		"title": "molestie in, tempus",
+    "author_id": 8,
+    "author_name": "Erica",
+		"created_at": 1536371057,
+		"type": "proceeding"
+	},
+	{
+		"id": 9,
+		"title": "felis orci, adipiscing non,",
+    "author_id": 9,
+    "author_name": "Xanthus",
+		"created_at": 1586581688,
+		"type": "book"
+	},
+	{
+		"id": 10,
+		"title": "et, rutrum non, hendrerit id,",
+    "author_id": 10,
+    "author_name": "Octavius",
+		"created_at": 1542073233,
+		"type": "journal"
+	},
+	{
+		"id": 11,
+		"title": "et arcu imperdiet",
+    "author_id": 11,
+    "author_name": "Bevis",
+		"created_at": 1585900468,
+		"type": "editorial"
+	},
+	{
+		"id": 12,
+		"title": "Etiam laoreet, libero",
+    "author_id": 12,
+    "author_name": "Bruce",
+		"created_at": 1559095213,
+		"type": "editorial"
+	},
+	{
+		"id": 13,
+		"title": "quam vel",
+    "author_id": 13,
+    "author_name": "Reece",
+		"created_at": 1582549282,
+		"type": "proceeding"
+	},
+	{
+		"id": 14,
+		"title": "nec tellus.",
+    "author_id": 14,
+    "author_name": "Vivien",
+		"created_at": 1567685944,
+		"type": "journal"
+	},
+	{
+		"id": 15,
+		"title": "placerat eget, venenatis",
+    "author_id": 15,
+    "author_name": "Melanie",
+		"created_at": 1569714307,
+		"type": "book"
+	},
+	{
+		"id": 16,
+		"title": "dolor. Donec fringilla.",
+    "author_id": 16,
+    "author_name": "Deanna",
+		"created_at": 1543248157,
+		"type": "editorial"
+	},
+	{
+		"id": 17,
+		"title": "Aenean massa. Integer vitae",
+    "author_id": 17,
+    "author_name": "Shafira",
+		"created_at": 1540288307,
+		"type": "book chapter"
+	},
+	{
+		"id": 18,
+		"title": "vulputate, risus a ultricies adipiscing,",
+    "author_id": 18,
+    "author_name": "Vernon",
+		"created_at": 1564542635,
+		"type": "book"
+	},
+	{
+		"id": 19,
+		"title": "lectus quis massa. Mauris vestibulum,",
+    "author_id": 19,
+    "author_name": "Karly",
+		"created_at": 1577544237,
+		"type": "editorial"
+	},
+	{
+		"id": 20,
+		"title": "magna a",
+    "author_id": 20,
+    "author_name": "Xerxes",
+		"created_at": 1559056957,
+		"type": "journal"
+	},
+	{
+		"id": 21,
+		"title": "Fusce fermentum fermentum arcu.",
+    "author_id": 21,
+    "author_name": "Armand",
+		"created_at": 1543779553,
+		"type": "book chapter"
+	},
+	{
+		"id": 22,
+		"title": "lorem ut",
+    "author_id": 22,
+    "author_name": "Gretchen",
+		"created_at": 1529359463,
+		"type": "book chapter"
+	},
+	{
+		"id": 23,
+		"title": "dui. Cum sociis natoque penatibus",
+    "author_id": 23,
+    "author_name": "Clayton",
+		"created_at": 1554828893,
+		"type": "editorial"
+	},
+	{
+		"id": 24,
+		"title": "sollicitudin commodo ipsum. Suspendisse non",
+    "author_id": 24,
+    "author_name": "Patricia",
+		"created_at": 1561629033,
+		"type": "editorial"
+	},
+	{
+		"id": 25,
+		"title": "Proin vel nisl.",
+    "author_id": 25,
+    "author_name": "Gary",
+		"created_at": 1582974262,
+		"type": "book"
+	},
+	{
+		"id": 26,
+		"title": "vulputate dui, nec tempus mauris",
+    "author_id": 26,
+    "author_name": "Murphy",
+		"created_at": 1531649951,
+		"type": "book"
+	},
+	{
+		"id": 27,
+		"title": "at pede. Cras vulputate",
+    "author_id": 27,
+    "author_name": "Orlando",
+		"created_at": 1555413341,
+		"type": "editorial"
+	},
+	{
+		"id": 28,
+		"title": "Proin vel arcu eu odio",
+    "author_id": 28,
+    "author_name": "Neve",
+		"created_at": 1534415906,
+		"type": "book"
+	},
+	{
+		"id": 29,
+		"title": "Nulla semper tellus id nunc",
+    "author_id": 29,
+    "author_name": "Davis",
+		"created_at": 1584192536,
+		"type": "book"
+	},
+	{
+		"id": 30,
+		"title": "Quisque ornare tortor",
+    "author_id": 30,
+    "author_name": "Leigh",
+		"created_at": 1580305564,
+		"type": "book"
+	},
+	{
+		"id": 31,
+		"title": "viverra. Donec",
+    "author_id": 31,
+    "author_name": "Brittany",
+		"created_at": 1541255049,
+		"type": "proceeding"
+	},
+	{
+		"id": 32,
+		"title": "Nunc lectus pede, ultrices a,",
+    "author_id": 32,
+    "author_name": "Bruce",
+		"created_at": 1575665584,
+		"type": "book"
+	},
+	{
+		"id": 33,
+		"title": "ut, pharetra sed,",
+    "author_id": 33,
+    "author_name": "Aladdin",
+		"created_at": 1562519316,
+		"type": "book"
+	},
+	{
+		"id": 34,
+		"title": "Sed nunc est,",
+    "author_id": 34,
+    "author_name": "Rahim",
+		"created_at": 1582941115,
+		"type": "editorial"
+	},
+	{
+		"id": 35,
+		"title": "urna. Nullam",
+    "author_id": 35,
+    "author_name": "Remedios",
+		"created_at": 1587281972,
+		"type": "journal"
+	},
+	{
+		"id": 36,
+		"title": "nisi a odio",
+    "author_id": 36,
+    "author_name": "Dale",
+		"created_at": 1543101149,
+		"type": "proceeding"
+	},
+	{
+		"id": 37,
+		"title": "dis parturient montes,",
+    "author_id": 37,
+    "author_name": "Miranda",
+		"created_at": 1577753470,
+		"type": "book"
+	},
+	{
+		"id": 38,
+		"title": "Curabitur dictum. Phasellus in felis.",
+    "author_id": 38,
+    "author_name": "Halee",
+		"created_at": 1551690696,
+		"type": "book"
+	},
+	{
+		"id": 39,
+		"title": "lobortis mauris. Suspendisse aliquet molestie",
+    "author_id": 39,
+    "author_name": "Maggie",
+		"created_at": 1536050179,
+		"type": "book"
+	},
+	{
+		"id": 40,
+		"title": "nunc nulla vulputate",
+    "author_id": 40,
+    "author_name": "Marah",
+		"created_at": 1565459596,
+		"type": "editorial"
+	},
+	{
+		"id": 41,
+		"title": "lectus quis massa.",
+    "author_id": 41,
+    "author_name": "Lars",
+		"created_at": 1557924976,
+		"type": "book"
+	},
+	{
+		"id": 42,
+		"title": "in consequat enim diam",
+    "author_id": 42,
+    "author_name": "Herrod",
+		"created_at": 1569539916,
+		"type": "book"
+	},
+	{
+		"id": 43,
+		"title": "aliquet odio. Etiam ligula tortor,",
+    "author_id": 43,
+    "author_name": "Wayne",
+		"created_at": 1570705325,
+		"type": "proceeding"
+	},
+	{
+		"id": 44,
+		"title": "arcu. Morbi sit",
+    "author_id": 44,
+    "author_name": "Bethany",
+		"created_at": 1563787146,
+		"type": "journal"
+	},
+	{
+		"id": 45,
+		"title": "gravida sit amet,",
+    "author_id": 45,
+    "author_name": "Reuben",
+		"created_at": 1571657575,
+		"type": "book"
+	},
+	{
+		"id": 46,
+		"title": "consectetuer adipiscing elit. Curabitur sed",
+    "author_id": 46,
+    "author_name": "Zorita",
+		"created_at": 1587137530,
+		"type": "book chapter"
+	},
+	{
+		"id": 47,
+		"title": "id risus quis",
+    "author_id": 47,
+    "author_name": "Ulla",
+		"created_at": 1556112872,
+		"type": "proceeding"
+	},
+	{
+		"id": 48,
+		"title": "quis, pede.",
+    "author_id": 48,
+    "author_name": "Kibo",
+		"created_at": 1563318443,
+		"type": "book"
+	},
+	{
+		"id": 49,
+		"title": "amet luctus",
+    "author_id": 49,
+    "author_name": "Burton",
+		"created_at": 1563990890,
+		"type": "editorial"
+	},
+	{
+		"id": 50,
+		"title": "lacinia orci, consectetuer",
+    "author_id": 50,
+    "author_name": "Wesley",
+		"created_at": 1563153212,
+		"type": "book chapter"
+	},
+	{
+		"id": 51,
+		"title": "faucibus orci",
+    "author_id": 51,
+    "author_name": "Gretchen",
+		"created_at": 1581594697,
+		"type": "book chapter"
+	},
+	{
+		"id": 52,
+		"title": "elit, a feugiat tellus lorem",
+    "author_id": 52,
+    "author_name": "Theodore",
+		"created_at": 1547367820,
+		"type": "book chapter"
+	},
+	{
+		"id": 53,
+		"title": "Donec nibh. Quisque nonummy",
+    "author_id": 53,
+    "author_name": "Bruno",
+		"created_at": 1588400724,
+		"type": "book chapter"
+	},
+	{
+		"id": 54,
+		"title": "lobortis augue scelerisque",
+    "author_id": 54,
+    "author_name": "Holly",
+		"created_at": 1572708851,
+		"type": "journal"
+	},
+	{
+		"id": 55,
+		"title": "aliquam adipiscing lacus.",
+    "author_id": 55,
+    "author_name": "Rhona",
+		"created_at": 1561637570,
+		"type": "book chapter"
+	},
+	{
+		"id": 56,
+		"title": "Nunc mauris. Morbi non sapien",
+    "author_id": 56,
+    "author_name": "Camille",
+		"created_at": 1575777342,
+		"type": "book"
+	},
+	{
+		"id": 57,
+		"title": "Etiam vestibulum massa",
+    "author_id": 57,
+    "author_name": "Leslie",
+		"created_at": 1554147034,
+		"type": "editorial"
+	},
+	{
+		"id": 58,
+		"title": "leo. Morbi",
+    "author_id": 58,
+    "author_name": "Avram",
+		"created_at": 1551838510,
+		"type": "editorial"
+	},
+	{
+		"id": 59,
+		"title": "vulputate mauris sagittis",
+    "author_id": 59,
+    "author_name": "Karen",
+		"created_at": 1531037665,
+		"type": "book"
+	},
+	{
+		"id": 60,
+		"title": "ac, eleifend vitae, erat.",
+    "author_id": 60,
+    "author_name": "Xander",
+		"created_at": 1582368528,
+		"type": "book"
+	},
+	{
+		"id": 61,
+		"title": "quis, tristique",
+    "author_id": 61,
+    "author_name": "Garrison",
+		"created_at": 1539290936,
+		"type": "book"
+	},
+	{
+		"id": 62,
+		"title": "sed orci lobortis augue",
+    "author_id": 62,
+    "author_name": "Kimberley",
+		"created_at": 1556254667,
+		"type": "proceeding"
+	},
+	{
+		"id": 63,
+		"title": "orci lacus",
+    "author_id": 63,
+    "author_name": "Jade",
+		"created_at": 1583766035,
+		"type": "book chapter"
+	},
+	{
+		"id": 64,
+		"title": "non magna. Nam ligula elit,",
+    "author_id": 64,
+    "author_name": "Joseph",
+		"created_at": 1578081409,
+		"type": "editorial"
+	},
+	{
+		"id": 65,
+		"title": "tellus non magna. Nam ligula",
+    "author_id": 65,
+    "author_name": "Aimee",
+		"created_at": 1527982342,
+		"type": "editorial"
+	},
+	{
+		"id": 66,
+		"title": "euismod est",
+    "author_id": 66,
+    "author_name": "Skyler",
+		"created_at": 1554959159,
+		"type": "book"
+	},
+	{
+		"id": 67,
+		"title": "Nulla facilisi. Sed neque. Sed",
+    "author_id": 67,
+    "author_name": "Knox",
+		"created_at": 1578799992,
+		"type": "journal"
+	},
+	{
+		"id": 68,
+		"title": "ante bibendum ullamcorper.",
+    "author_id": 68,
+    "author_name": "Slade",
+		"created_at": 1568187257,
+		"type": "journal"
+	},
+	{
+		"id": 69,
+		"title": "adipiscing elit. Etiam laoreet,",
+    "author_id": 69,
+    "author_name": "Julian",
+		"created_at": 1542712857,
+		"type": "book"
+	},
+	{
+		"id": 70,
+		"title": "elit, pellentesque a, facilisis",
+    "author_id": 70,
+    "author_name": "Neville",
+		"created_at": 1585402902,
+		"type": "journal"
+	},
+	{
+		"id": 71,
+		"title": "interdum. Nunc sollicitudin commodo",
+    "author_id": 71,
+    "author_name": "Jade",
+		"created_at": 1537902763,
+		"type": "journal"
+	},
+	{
+		"id": 72,
+		"title": "nec luctus felis purus ac",
+    "author_id": 72,
+    "author_name": "Reagan",
+		"created_at": 1548933133,
+		"type": "proceeding"
+	},
+	{
+		"id": 73,
+		"title": "est. Mauris",
+    "author_id": 73,
+    "author_name": "Wylie",
+		"created_at": 1587821173,
+		"type": "book"
+	},
+	{
+		"id": 74,
+		"title": "auctor velit. Aliquam nisl.",
+    "author_id": 74,
+    "author_name": "Charissa",
+		"created_at": 1549645598,
+		"type": "book"
+	},
+	{
+		"id": 75,
+		"title": "imperdiet ornare.",
+    "author_id": 75,
+    "author_name": "Mohammad",
+		"created_at": 1552109522,
+		"type": "proceeding"
+	},
+	{
+		"id": 76,
+		"title": "ipsum. Phasellus vitae mauris sit",
+    "author_id": 76,
+    "author_name": "Steven",
+		"created_at": 1532159576,
+		"type": "book chapter"
+	},
+	{
+		"id": 77,
+		"title": "est ac facilisis facilisis, magna",
+    "author_id": 77,
+    "author_name": "Geoffrey",
+		"created_at": 1550731948,
+		"type": "book"
+	},
+	{
+		"id": 78,
+		"title": "pellentesque a, facilisis non,",
+    "author_id": 78,
+    "author_name": "Rooney",
+		"created_at": 1583285828,
+		"type": "editorial"
+	},
+	{
+		"id": 79,
+		"title": "sociis natoque penatibus",
+    "author_id": 79,
+    "author_name": "Damon",
+		"created_at": 1527334654,
+		"type": "journal"
+	},
+	{
+		"id": 80,
+		"title": "Sed nunc",
+    "author_id": 80,
+    "author_name": "Isaac",
+		"created_at": 1532162022,
+		"type": "editorial"
+	},
+	{
+		"id": 81,
+		"title": "convallis est,",
+    "author_id": 81,
+    "author_name": "Maxwell",
+		"created_at": 1533469743,
+		"type": "journal"
+	},
+	{
+		"id": 82,
+		"title": "ultrices. Vivamus rhoncus.",
+    "author_id": 82,
+    "author_name": "Merrill",
+		"created_at": 1538565459,
+		"type": "proceeding"
+	},
+	{
+		"id": 83,
+		"title": "sit amet luctus vulputate, nisi",
+    "author_id": 83,
+    "author_name": "Judith",
+		"created_at": 1535635803,
+		"type": "book chapter"
+	},
+	{
+		"id": 84,
+		"title": "et, magna.",
+    "author_id": 84,
+    "author_name": "Noble",
+		"created_at": 1557343011,
+		"type": "editorial"
+	},
+	{
+		"id": 85,
+		"title": "In tincidunt congue turpis. In",
+    "author_id": 85,
+    "author_name": "Burton",
+		"created_at": 1559473839,
+		"type": "journal"
+	},
+	{
+		"id": 86,
+		"title": "enim. Etiam",
+    "author_id": 86,
+    "author_name": "Cally",
+		"created_at": 1579089829,
+		"type": "book"
+	},
+	{
+		"id": 87,
+		"title": "suscipit nonummy. Fusce fermentum fermentum",
+    "author_id": 87,
+    "author_name": "Colt",
+		"created_at": 1550921161,
+		"type": "editorial"
+	},
+	{
+		"id": 88,
+		"title": "et ultrices",
+    "author_id": 88,
+    "author_name": "Craig",
+		"created_at": 1553268653,
+		"type": "book chapter"
+	},
+	{
+		"id": 89,
+		"title": "ultricies sem magna",
+    "author_id": 89,
+    "author_name": "Eaton",
+		"created_at": 1574160326,
+		"type": "book"
+	},
+	{
+		"id": 90,
+		"title": "lacus. Ut nec urna et",
+    "author_id": 90,
+    "author_name": "Sacha",
+		"created_at": 1559624902,
+		"type": "editorial"
+	},
+	{
+		"id": 91,
+		"title": "iaculis nec,",
+    "author_id": 91,
+    "author_name": "Gareth",
+		"created_at": 1555970705,
+		"type": "journal"
+	},
+	{
+		"id": 92,
+		"title": "Integer aliquam adipiscing lacus. Ut",
+    "author_id": 92,
+    "author_name": "Xyla",
+		"created_at": 1563528050,
+		"type": "journal"
+	},
+	{
+		"id": 93,
+		"title": "iaculis aliquet",
+    "author_id": 93,
+    "author_name": "Jasmine",
+		"created_at": 1572303301,
+		"type": "journal"
+	},
+	{
+		"id": 94,
+		"title": "condimentum. Donec at arcu.",
+    "author_id": 94,
+    "author_name": "Grant",
+		"created_at": 1565238225,
+		"type": "editorial"
+	},
+	{
+		"id": 95,
+		"title": "arcu iaculis",
+    "author_id": 95,
+    "author_name": "Sean",
+		"created_at": 1555755244,
+		"type": "book chapter"
+	},
+	{
+		"id": 96,
+		"title": "sagittis placerat. Cras dictum",
+    "author_id": 96,
+    "author_name": "Harding",
+		"created_at": 1556949335,
+		"type": "journal"
+	},
+	{
+		"id": 97,
+		"title": "Proin mi. Aliquam gravida mauris",
+    "author_id": 97,
+    "author_name": "Ralph",
+		"created_at": 1559400040,
+		"type": "editorial"
+	},
+	{
+		"id": 98,
+		"title": "metus. In nec orci. Donec",
+    "author_id": 98,
+    "author_name": "Brett",
+		"created_at": 1554183910,
+		"type": "proceeding"
+	},
+	{
+		"id": 99,
+		"title": "ac metus vitae velit",
+    "author_id": 99,
+    "author_name": "Slade",
+		"created_at": 1582094068,
+		"type": "editorial"
+	},
+	{
+		"id": 100,
+		"title": "bibendum ullamcorper.",
+    "author_id": 100,
+    "author_name": "Lillith",
+		"created_at": 1575821836,
+		"type": "proceeding"
+	}
+]
