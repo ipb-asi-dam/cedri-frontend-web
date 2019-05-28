@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import t from 'prop-types'
-import classNames from 'classnames'
+import classNames from 'clsx'
 import compose from 'recompose/compose'
 
 // MUI components

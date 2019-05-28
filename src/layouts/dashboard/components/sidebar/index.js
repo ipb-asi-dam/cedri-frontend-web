@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext } from 'react'
 import t from 'prop-types'
-import classNames from 'classnames'
+import classNames from 'clsx'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { NavLink as RRNavLink, Link as RRLink } from 'react-router-dom'
 
@@ -29,7 +29,7 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
         </ListItem>
         <Divider className={classes.logoDivider} />
         <div className={classes.profile}>
-          <RRLink to='/account'>
+          <RRLink to='/dashboard/account'>
             <Avatar
               alt={userInfo.user.name}
               className={classes.avatar}
@@ -52,7 +52,7 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
           )}
         </div>
         <Divider className={classes.profileDivider} />
-        {routes.map(route => (
+        {routes.map(route => route.icon && (
           <ListItem
             key={route.path}
             activeClassName={classes.itemActiveItem}

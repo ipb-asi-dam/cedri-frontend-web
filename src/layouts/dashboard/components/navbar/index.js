@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import t from 'prop-types'
-import classNames from 'classnames'
+import classNames from 'clsx'
 
 // MUI Components
 import Badge from '@material-ui/core/Badge'
