@@ -1,6 +1,6 @@
 export default (theme) => ({
   button: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(4),
     textTransform: 'uppercase',
     width: '60%'
   },
@@ -27,10 +27,13 @@ export default (theme) => ({
     width: '20rem'
   },
   link: {
-    alignSelf: 'flex-end',
     color: '#0767db',
-    fontSize: theme.spacing(1.8),
+    fontSize: theme.spacing(1.5),
     marginTop: theme.spacing(1),
-    textDecoration: 'none'
+    textDecoration: 'none',
+    '&.forget-password': {
+      alignSelf: 'flex-end',
+      fontSize: theme.spacing(1.8)
+    }
   }
 })

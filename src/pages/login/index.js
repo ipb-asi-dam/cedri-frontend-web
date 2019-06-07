@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'clsx'
 
 import Form from 'react-vanilla-form'
 
@@ -24,13 +25,13 @@ import styles from './styles'
 function Login ({ classes }) {
   const { login } = useContext(AuthContext)
   const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+  const [isSubmitting, setSubmitting] = useState(false)
 
   return (
     <div className={classes.container}>
       <Slide direction='right' in mountOnEnter unmountOnExit>
         <Paper className={classes.card} elevation={3}>
-          {isSubmiting
+          {isSubmitting
             ? (
               <>
                 <h2>Sending request...</h2>
@@ -49,10 +50,9 @@ function Login ({ classes }) {
                   onSubmit={async (data, errors) => {
                     if (errors !== undefined) return setValid(false)
 
-                    setSubmiting(true)
+                    setSubmitting(true)
                     await login(data)
                   }}
-                  validateOn='change'
                   validation={{
                     email: [required, email],
                     password: required
@@ -62,32 +62,38 @@ function Login ({ classes }) {
                     <RFTextField
                       autoComplete='email'
                       autoFocus
-                      isSubmiting={isSubmiting}
+                      disabled={isSubmitting}
                       label='Email'
                       margin='normal'
                       name='email'
                     />
                     <TextFieldVisibility
                       autoComplete='password'
-                      isSubmiting={isSubmiting}
+                      disabled={isSubmitting}
                       label='Password'
                       margin='normal'
                       name='password'
                       type='password'
                     />
-                    <Link className={classes.link} to='/recover-password'>
+                    <Link
+                      className={classnames('forget-password', classes.link)}
+                      to='/recover-password'
+                    >
                       Forgot your password?
                     </Link>
                     <Button
                       className={classes.button}
                       color='primary'
-                      disabled={!isValid || isSubmiting}
+                      disabled={!isValid || isSubmitting}
                       size='large'
                       type='submit'
                       variant='contained'
                     >
                       Login
                     </Button>
+                    <Link className={classes.link} to='/'>
+                      Back to home page
+                    </Link>
                   </div>
                 </Form>
               </>
