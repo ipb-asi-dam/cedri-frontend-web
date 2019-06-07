@@ -1,26 +1,15 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-
-import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
-
 import Form from 'react-vanilla-form'
 
 // components
 import RFTextField from 'components/text-field'
-import HandleButtons from './handle-buttons'
 
 // utils
 import format from 'date-fns/format'
 import subDays from 'date-fns/sub_days'
 import { checkDate, required, url } from 'utils/validations'
-
-const styles = theme => ({
-  divider: {
-    marginTop: theme.spacing(3)
-  }
-})
 
 const minDate = format(new Date(1980, 1, 1), 'YYYY-MM-DD')
 const today = format(new Date(), 'YYYY-MM-DD')
@@ -29,50 +18,30 @@ const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
 const dateProps = { min: minDate, max: today }
 const datePrevProps = { min: minDate, max: yesterday }
 
-function BookForm ({ classes, handleCloseDialog }) {
-  const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
-  const [data, setFormData] = useState({
-    openingDate: undefined,
-    closingDate: undefined
-  })
-
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData({
-      openingDate: undefined,
-      closingDate: undefined
-    })
-  }, [])
-
+function BookForm ({
+  children,
+  closeForm,
+  data,
+  isSubmiting,
+  onSubmit,
+  setFormData,
+  setSubmiting,
+  setValid
+}) {
   return (
     <Form
       customErrorProp='error'
       data={data}
       keepErrorOnFocus
       onChange={(data, errors) => {
-        setFormData({
-          openingDate: data.openingDate,
-          closingDate: data.closingDate
-        })
-
+        setFormData(data)
         if (!Object.keys(errors).length) setValid(true)
       }}
-      onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
-
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
-      }}
-      validateOn='change'
+      onSubmit={onSubmit}
       validation={{
         address: required,
         authors: required,
-        closingDate: [required],
+        closingDate: required,
         date: required,
         edition: required,
         link: [required, url],
@@ -87,11 +56,11 @@ function BookForm ({ classes, handleCloseDialog }) {
         volume: required
       }}
     >
-      <Grid container spacing={16}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RFTextField
             autoFocus
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Title'
             margin='normal'
             name='title'
@@ -99,7 +68,7 @@ function BookForm ({ classes, handleCloseDialog }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Authors'
             margin='normal'
             name='authors'
@@ -108,14 +77,14 @@ function BookForm ({ classes, handleCloseDialog }) {
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Link'
             name='link'
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Pages'
             name='pages'
             type='number'
@@ -123,7 +92,7 @@ function BookForm ({ classes, handleCloseDialog }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Publication Date'
             name='date'
             type='month'
@@ -133,7 +102,7 @@ function BookForm ({ classes, handleCloseDialog }) {
         <Grid item xs={6} sm={4}>
           <RFTextField
             inputProps={datePrevProps}
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Opening Date'
             name='openingDate'
             type='date'
@@ -143,7 +112,7 @@ function BookForm ({ classes, handleCloseDialog }) {
         <Grid item xs={6} sm={4}>
           <RFTextField
             inputProps={dateProps}
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Closing Date'
             name='closingDate'
             type='date'
@@ -152,21 +121,21 @@ function BookForm ({ classes, handleCloseDialog }) {
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Address'
             name='address'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Publisher'
             name='publisher'
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Edition'
             name='edition'
             type='number'
@@ -174,7 +143,7 @@ function BookForm ({ classes, handleCloseDialog }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Number'
             name='number'
             type='number'
@@ -182,22 +151,27 @@ function BookForm ({ classes, handleCloseDialog }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Volume'
             name='volume'
             type='number'
           />
         </Grid>
       </Grid>
-      <Divider className={classes.divider} />
-      <HandleButtons disabled={!isValid || isSubmiting} />
+      {children}
     </Form>
   )
 }
 
 BookForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleCloseDialog: PropTypes.func.isRequired
+  children: PropTypes.node.isRequired,
+  closeForm: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired,
+  isSubmiting: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  setFormData: PropTypes.func.isRequired,
+  setSubmiting: PropTypes.func.isRequired,
+  setValid: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(BookForm)
+export default BookForm

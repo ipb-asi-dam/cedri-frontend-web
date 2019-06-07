@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
 import Form from 'react-vanilla-form'
 
 // components
@@ -11,24 +9,19 @@ import RFTextField from 'components/text-field'
 // utils
 import { required } from 'utils/validations'
 
-const styles = theme => ({
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
-})
-
-function AwardForm ({ classes }) {
-  const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+function AwardForm ({
+  children,
+  isSubmiting,
+  setSubmiting,
+  setValid
+}) {
   const [data, setFormData] = useState({})
 
   const resetForm = useCallback(() => {
     setSubmiting(false)
     setValid(true)
     setFormData({})
-  }, [])
+  }, [setValid, setSubmiting])
 
   return (
     <Form
@@ -47,7 +40,6 @@ function AwardForm ({ classes }) {
           resetForm()
         }, 2500)
       }}
-      validateOn='change'
       validation={{
         event: required,
         date: required,
@@ -55,11 +47,11 @@ function AwardForm ({ classes }) {
         title: required
       }}
     >
-      <Grid container spacing={16}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RFTextField
             autoFocus
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Title'
             margin='normal'
             name='title'
@@ -67,7 +59,7 @@ function AwardForm ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Event'
             margin='normal'
             name='event'
@@ -75,16 +67,15 @@ function AwardForm ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Prize Winners'
-            margin='normal'
             name='prizeWinners'
             placeholder='The prizes must be separated by comma'
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Publication Date'
             name='date'
             type='month'
@@ -92,22 +83,16 @@ function AwardForm ({ classes }) {
           />
         </Grid>
       </Grid>
-      <Button
-        className={classes.button}
-        color='primary'
-        disabled={!isValid || isSubmiting}
-        fullWidth
-        type='submit'
-        variant='contained'
-      >
-        { isSubmiting ? 'In progress' : 'Confirm' }
-      </Button>
+      {children}
     </Form>
   )
 }
 
 AwardForm.propTypes = {
-  classes: PropTypes.object.isRequired
+  children: PropTypes.node.isRequired,
+  isSubmiting: PropTypes.bool.isRequired,
+  setSubmiting: PropTypes.func.isRequired,
+  setValid: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(AwardForm)
+export default AwardForm

@@ -10,5 +10,12 @@ export default (theme) => ({
     '& + &': {
       marginLeft: 10
     }
+  },
+  submitingLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    '& > .MuiCircularProgress-indeterminate': {
+      marginLeft: 10
+    }
   }
 })

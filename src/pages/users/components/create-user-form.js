@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import axios from 'config/axios'
 
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
 import Form from 'react-vanilla-form'
 
 // components
@@ -12,15 +10,7 @@ import RFTextField from 'components/text-field'
 // utils
 import { required, email } from 'utils/validations'
 
-const styles = theme => ({
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
-})
-
-function CreateUserForm ({ children, closeForm, setData }) {
+function CreateUserForm ({ children, isSubmiting, onSubmit, setData }) {
   return (
     <Form
       customErrorProp='error'
@@ -30,14 +20,7 @@ function CreateUserForm ({ children, closeForm, setData }) {
         isAdmin: false
       }}
       keepErrorOnFocus
-      onSubmit={async (data, errors) => {
-        if (errors !== undefined) return
-
-        const user = await axios.post('/private/users', data)
-
-        setData(user.data.data)
-        closeForm()
-      }}
+      onSubmit={onSubmit}
       validation={{
         name: [required],
         email: [required, email]
@@ -47,19 +30,25 @@ function CreateUserForm ({ children, closeForm, setData }) {
         <Grid item xs={12}>
           <RFTextField
             autoFocus
+            disabled={isSubmiting}
             label='Name'
             name='name'
           />
         </Grid>
         <Grid item xs={12}>
           <RFTextField
+            disabled={isSubmiting}
             label='Email'
             name='email'
           />
         </Grid>
         <Grid item xs={12}>
           <label htmlFor='isAdmin'>
-            <input type='checkbox' name='isAdmin' />
+            <input
+              disabled={isSubmiting}
+              type='checkbox'
+              name='isAdmin'
+            />
             Is Administrator?
           </label>
         </Grid>
@@ -71,8 +60,9 @@ function CreateUserForm ({ children, closeForm, setData }) {
 
 CreateUserForm.propTypes = {
   children: PropTypes.node,
-  closeForm: PropTypes.func.isRequired,
+  isSubmiting: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(CreateUserForm)
+export default CreateUserForm

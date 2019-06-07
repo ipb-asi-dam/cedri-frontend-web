@@ -1,8 +1,8 @@
-import React, { forwardRef, useContext } from 'react'
+import React, { useContext } from 'react'
 import t from 'prop-types'
 import classNames from 'clsx'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { NavLink as RRNavLink, Link as RRLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar'
 import Divider from '@material-ui/core/Divider'
@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography'
 import { AuthContext } from 'contexts/auth'
 import styles from './styles'
 
-const NavLink = forwardRef((props, ref) => <RRNavLink innerRef={ref} {...props} />)
+import NavLink from 'components/nav-link'
 
 function Sidebar ({ classes, className, onChangeRoute, routes }) {
   const { userInfo } = useContext(AuthContext)
@@ -24,18 +24,23 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
   return (
     <nav className={rootClass}>
       <List component='div' disablePadding>
-        <ListItem className={classes.logoWrapper}>
+        <ListItem
+          className={classes.logoWrapper}
+          component={NavLink}
+          exact
+          to='/'
+        >
           CeDRI
         </ListItem>
         <Divider className={classes.logoDivider} />
         <div className={classes.profile}>
-          <RRLink to='/dashboard/account'>
+          <Link to='/dashboard/account'>
             <Avatar
               alt={userInfo.user.name}
               className={classes.avatar}
               src={userInfo.user.user.avatar || '//via.placeholder.com/100'}
             />
-          </RRLink>
+          </Link>
           <Typography
             className={classes.nameText}
             variant='h6'
@@ -57,7 +62,7 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
             key={route.path}
             activeClassName={classes.itemActiveItem}
             button
-            className={classes.listIitem}
+            className={classes.listItem}
             component={NavLink}
             exact
             onClick={onChangeRoute(route.name)}

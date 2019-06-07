@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
 import Form from 'react-vanilla-form'
 
 // components
@@ -11,28 +9,19 @@ import RFTextField from 'components/text-field'
 // utils
 import { required } from 'utils/validations'
 
-const styles = theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
-})
-
-function SignUp ({ classes }) {
-  const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+function ThesisForm ({
+  children,
+  isSubmiting,
+  setSubmiting,
+  setValid
+}) {
   const [data, setFormData] = useState({})
 
   const resetForm = useCallback(() => {
     setSubmiting(false)
     setValid(true)
     setFormData({})
-  }, [])
+  }, [setSubmiting, setValid])
 
   return (
     <Form
@@ -51,7 +40,6 @@ function SignUp ({ classes }) {
           resetForm()
         }, 2500)
       }}
-      validateOn='change'
       validation={{
         course: required,
         date: required,
@@ -62,11 +50,11 @@ function SignUp ({ classes }) {
         title: required
       }}
     >
-      <Grid container spacing={16}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RFTextField
             autoFocus
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Title'
             margin='normal'
             name='title'
@@ -74,7 +62,7 @@ function SignUp ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Course'
             margin='normal'
             name='course'
@@ -82,7 +70,7 @@ function SignUp ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Student Name'
             margin='normal'
             name='studentName'
@@ -90,7 +78,7 @@ function SignUp ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Instituion'
             margin='normal'
             name='instituion'
@@ -98,7 +86,7 @@ function SignUp ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='These Type'
             margin='normal'
             name='theseType'
@@ -118,7 +106,7 @@ function SignUp ({ classes }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Delivery Date'
             margin='normal'
             name='date'
@@ -128,7 +116,7 @@ function SignUp ({ classes }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Supervisors'
             margin='normal'
             name='supervisors'
@@ -136,22 +124,16 @@ function SignUp ({ classes }) {
           />
         </Grid>
       </Grid>
-      <Button
-        className={classes.button}
-        color='primary'
-        disabled={!isValid || isSubmiting}
-        fullWidth
-        type='submit'
-        variant='contained'
-      >
-        { isSubmiting ? 'In progress' : 'Confirm' }
-      </Button>
+      {children}
     </Form>
   )
 }
 
-SignUp.propTypes = {
-  classes: PropTypes.object.isRequired
+ThesisForm.propTypes = {
+  children: PropTypes.node.isRequired,
+  isSubmiting: PropTypes.bool.isRequired,
+  setSubmiting: PropTypes.func.isRequired,
+  setValid: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(SignUp)
+export default ThesisForm

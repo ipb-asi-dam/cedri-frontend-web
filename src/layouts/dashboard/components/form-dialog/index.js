@@ -7,7 +7,9 @@ import Slide from '@material-ui/core/Slide'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
-import CloseIcon from '@material-ui/icons/Close'
+
+import Icon from 'components/icon'
+import { ic_close as CloseIcon } from 'react-icons-kit/md/ic_close'
 
 const styles = theme => ({
   appBar: {
@@ -53,7 +55,7 @@ const FormDialog = ({
         color='inherit'
         onClick={handleCloseDialog}
       >
-        <CloseIcon />
+        <Icon icon={CloseIcon} />
       </IconButton>
 
       <Typography variant='h3'>

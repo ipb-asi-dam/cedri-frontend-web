@@ -1,25 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
 import Form from 'react-vanilla-form'
 
 // components
 import RFTextField from 'components/text-field'
-import HandleButtons from './handle-buttons'
 
 // utils
 import subDays from 'date-fns/sub_days'
 import format from 'date-fns/format'
 import { checkDate, required, url } from 'utils/validations'
-
-const styles = theme => ({
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
-})
 
 const minDate = format(new Date(1980, 1, 1), 'YYYY-MM-DD')
 const today = format(new Date(), 'YYYY-MM-DD')
@@ -28,9 +18,12 @@ const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
 const dateProps = { min: minDate, max: today }
 const datePrevProps = { min: minDate, max: yesterday }
 
-function BookChapterForm ({ classes }) {
-  const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+function BookChapterForm ({
+  children,
+  isSubmiting,
+  setSubmiting,
+  setValid
+}) {
   const [data, setFormData] = useState({
     openingDate: undefined,
     closingDate: undefined
@@ -43,7 +36,7 @@ function BookChapterForm ({ classes }) {
       openingDate: undefined,
       closingDate: undefined
     })
-  }, [])
+  }, [setSubmiting, setValid])
 
   return (
     <Form
@@ -89,11 +82,11 @@ function BookChapterForm ({ classes }) {
         volume: required
       }}
     >
-      <Grid container spacing={16}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RFTextField
             autoFocus
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Title'
             margin='normal'
             name='title'
@@ -101,7 +94,7 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Authors'
             margin='normal'
             name='authors'
@@ -110,14 +103,14 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Link'
             name='link'
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Pages'
             name='pages'
             type='number'
@@ -125,7 +118,7 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Publication Date'
             name='date'
             type='month'
@@ -135,7 +128,7 @@ function BookChapterForm ({ classes }) {
         <Grid item xs={6} sm={4}>
           <RFTextField
             inputProps={datePrevProps}
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Opening Date'
             name='openingDate'
             type='date'
@@ -145,7 +138,7 @@ function BookChapterForm ({ classes }) {
         <Grid item xs={6} sm={4}>
           <RFTextField
             inputProps={dateProps}
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Closing Date'
             name='closingDate'
             type='date'
@@ -154,35 +147,35 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Book Title'
             name='bookTitle'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Series'
             name='series'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Address'
             name='address'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Publisher'
             name='publisher'
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Chapter'
             name='chapter'
             type='number'
@@ -190,7 +183,7 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Edition'
             name='edition'
             type='number'
@@ -198,7 +191,7 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Number'
             name='number'
             type='number'
@@ -206,23 +199,23 @@ function BookChapterForm ({ classes }) {
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Volume'
             name='volume'
             type='number'
           />
         </Grid>
       </Grid>
-      <HandleButtons
-
-        disabled={!isValid || isSubmiting}
-      />
+      {children}
     </Form>
   )
 }
 
 BookChapterForm.propTypes = {
-  classes: PropTypes.object.isRequired
+  children: PropTypes.node.isRequired,
+  isSubmiting: PropTypes.bool.isRequired,
+  setSubmiting: PropTypes.func.isRequired,
+  setValid: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(BookChapterForm)
+export default BookChapterForm

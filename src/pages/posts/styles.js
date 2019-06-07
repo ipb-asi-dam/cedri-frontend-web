@@ -5,7 +5,7 @@ export default (theme) => ({
   toolbar: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(3)
   },
   dialog: {
     padding: theme.spacing(4)

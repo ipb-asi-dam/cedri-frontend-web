@@ -17,8 +17,15 @@ export default theme => ({
   menuButton: {
     marginLeft: '-4px'
   },
-  notificationsButton: {
-    marginLeft: 'auto'
+  homeButton: {
+    marginLeft: 'auto',
+    '& a': {
+      color: 'inherit',
+      textAlign: 'center',
+      '& svg': {
+        verticalAlign: 'middle'
+      }
+    }
   },
   signOutButton: {
     marginLeft: theme.spacing(1)

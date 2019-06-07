@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
 import Form from 'react-vanilla-form'
 
 // components
@@ -11,24 +9,19 @@ import RFTextField from 'components/text-field'
 // utils
 import { required } from 'utils/validations'
 
-const styles = theme => ({
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
-})
-
-function PatentForm ({ classes }) {
-  const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+function PatentForm ({
+  children,
+  isSubmiting,
+  setSubmiting,
+  setValid
+}) {
   const [data, setFormData] = useState({})
 
   const resetForm = useCallback(() => {
     setSubmiting(false)
     setValid(true)
     setFormData({})
-  }, [])
+  }, [setSubmiting, setValid])
 
   return (
     <Form
@@ -47,18 +40,17 @@ function PatentForm ({ classes }) {
           resetForm()
         }, 2500)
       }}
-      validateOn='change'
       validation={{
         authors: required,
         patentNumbers: required,
         title: required
       }}
     >
-      <Grid container spacing={16}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RFTextField
             autoFocus
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Title'
             margin='normal'
             name='title'
@@ -66,7 +58,7 @@ function PatentForm ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Authors'
             margin='normal'
             name='authors'
@@ -75,7 +67,7 @@ function PatentForm ({ classes }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Patent Numbers'
             margin='normal'
             name='patentNumbers'
@@ -83,22 +75,16 @@ function PatentForm ({ classes }) {
           />
         </Grid>
       </Grid>
-      <Button
-        className={classes.button}
-        color='secondary'
-        disabled={!isValid || isSubmiting}
-        fullWidth
-        type='submit'
-        variant='contained'
-      >
-        { isSubmiting ? 'In progress' : 'Confirm' }
-      </Button>
+      {children}
     </Form>
   )
 }
 
 PatentForm.propTypes = {
-  classes: PropTypes.object.isRequired
+  children: PropTypes.node.isRequired,
+  isSubmiting: PropTypes.bool.isRequired,
+  setSubmiting: PropTypes.func.isRequired,
+  setValid: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(PatentForm)
+export default PatentForm

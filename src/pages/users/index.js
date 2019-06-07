@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'config/axios'
 
@@ -12,10 +12,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
+import { ic_add as AddIcon } from 'react-icons-kit/md/ic_add'
+import { ic_delete as DeleteIcon } from 'react-icons-kit/md/ic_delete'
+import { ic_edit as EditIcon } from 'react-icons-kit/md/ic_edit'
 
+import Icon from 'components/icon'
 import Avatar from './components/avatar'
 import CreateUserForm from './components/create-user-form'
 
@@ -63,18 +64,33 @@ const options = {
 }
 
 function Users ({ classes }) {
+  const [isSubmiting, setSubmiting] = useState(false)
   const [isOpen, handleDialog] = useState(false)
   const [tableData, setData] = useState([])
 
-  const openForm = () => handleDialog(true)
-  const closeForm = () => handleDialog(false)
-  const updateData = (data) => {
+  const openForm = useCallback(() => handleDialog(true), [])
+  const closeForm = useCallback(() => handleDialog(false), [])
+
+  const updateData = useCallback((data) => {
     const { id, name, isAdmin, user: { avatar, email } } = data
     setData([
       [id, avatar, name, email, isAdmin],
       ...tableData
     ])
-  }
+  }, [tableData])
+
+  const submitForm = useCallback(async (data, errors) => {
+    if (errors !== undefined) return
+
+    try {
+      setSubmiting(true)
+      const user = await axios.post('/private/users', data)
+      updateData(user.data.data)
+    } finally {
+      setSubmiting(false)
+      closeForm()
+    }
+  }, [closeForm, updateData])
 
   const deleteRow = async (id) => {
     try {
@@ -108,13 +124,17 @@ function Users ({ classes }) {
       <Dialog open={isOpen} onClose={closeForm}>
         <DialogTitle>Create an user</DialogTitle>
         <DialogContent>
-          <CreateUserForm closeForm={closeForm} setData={updateData}>
+          <CreateUserForm
+            isSubmiting={isSubmiting}
+            onSubmit={submitForm}
+            setData={updateData}
+          >
             <DialogActions>
               <Button onClick={closeForm} color='primary'>
                 Cancel
               </Button>
-              <Button type='submit' color='primary'>
-                Create
+              <Button type='submit' color='primary' disabled={isSubmiting}>
+                Confirm
               </Button>
             </DialogActions>
           </CreateUserForm>
@@ -127,7 +147,7 @@ function Users ({ classes }) {
           onClick={openForm}
           variant='outlined'
         >
-          Add <AddIcon />
+          Add <Icon icon={AddIcon} />
         </Button>
       </div>
 
@@ -143,10 +163,10 @@ function Users ({ classes }) {
               customBodyRender: (_, tableMeta) => (
                 <>
                   <IconButton>
-                    <EditIcon />
+                    <Icon icon={EditIcon} />
                   </IconButton>
                   <IconButton onClick={() => deleteRow(tableMeta.rowData[0])}>
-                    <DeleteIcon />
+                    <Icon icon={DeleteIcon} />
                   </IconButton>
                 </>
               )

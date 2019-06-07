@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import t from 'prop-types'
 import classNames from 'clsx'
+import { Link } from 'react-router-dom'
 
 // MUI Components
-import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -11,11 +11,11 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 // MUI Icons
 import CloseIcon from '@material-ui/icons/Close'
+import HomeIcon from '@material-ui/icons/HomeOutlined'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
 import LockIcon from '@material-ui/icons/LockOutlined'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import MenuIcon from '@material-ui/icons/Menu'
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined'
 
 import { AuthContext } from 'contexts/auth'
 import styles from './styles'
@@ -46,10 +46,10 @@ function Navbar ({
           {title}
         </Typography>
 
-        <IconButton className={classes.notificationsButton}>
-          <Badge color='primary' variant='dot'>
-            <NotificationsIcon />
-          </Badge>
+        <IconButton className={classes.homeButton}>
+          <Link to='/'>
+            <HomeIcon />
+          </Link>
         </IconButton>
 
         <IconButton onClick={changeUserRole}>

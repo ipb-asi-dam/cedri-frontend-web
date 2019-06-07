@@ -1,35 +1,29 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import withStyles from '@material-ui/core/styles/withStyles'
 import Form from 'react-vanilla-form'
 
 // components
 import RFTextField from 'components/text-field'
-import TextEditor from 'src/components/text-editor'
+import TextEditor from 'components/text-editor'
 
 // utils
 import { required, url } from 'utils/validations'
 
-const styles = theme => ({
-  button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
-})
-
-function NewsForm ({ classes, initialData }) {
-  const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+function NewsForm ({
+  children,
+  initialData,
+  isSubmiting,
+  setSubmiting,
+  setValid
+}) {
   const [data, setFormData] = useState(initialData)
 
   const resetForm = useCallback(() => {
     setSubmiting(false)
     setValid(true)
     setFormData(initialData)
-  }, [initialData])
+  }, [initialData, setSubmiting, setValid])
 
   return (
     <Form
@@ -55,40 +49,31 @@ function NewsForm ({ classes, initialData }) {
         name: required
       }}
     >
-      <Grid container spacing={16}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RFTextField
             autoFocus
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Name'
             name='name'
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <RFTextField
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Link'
             name='link'
           />
         </Grid>
         <Grid item xs={12}>
           <TextEditor
-            isSubmiting={isSubmiting}
+            disabled={isSubmiting}
             label='Description'
             name='description'
           />
         </Grid>
       </Grid>
-      <Button
-        className={classes.button}
-        color='secondary'
-        disabled={!isValid || isSubmiting}
-        fullWidth
-        type='submit'
-        variant='contained'
-      >
-        { isSubmiting ? 'In progress' : 'Confirm' }
-      </Button>
+      {children}
     </Form>
   )
 }
@@ -98,8 +83,11 @@ NewsForm.defaultProps = {
 }
 
 NewsForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  initialData: PropTypes.object
+  children: PropTypes.node.isRequired,
+  initialData: PropTypes.object,
+  isSubmiting: PropTypes.bool.isRequired,
+  setSubmiting: PropTypes.func.isRequired,
+  setValid: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(NewsForm)
+export default NewsForm

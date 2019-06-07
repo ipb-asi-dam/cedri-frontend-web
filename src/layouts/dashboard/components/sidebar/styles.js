@@ -29,13 +29,17 @@ export default (theme) => ({
     marginBottom: theme.spacing(2)
   },
   logoWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
+    color: 'inherit',
+    display: 'flex',
+    flexShrink: 0,
     height: '63px',
-    flexShrink: 0
+    justifyContent: 'center',
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
-  listIitem: {
+  listItem: {
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: theme.palette.primary.light,

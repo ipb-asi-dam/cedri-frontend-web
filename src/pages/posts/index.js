@@ -1,31 +1,27 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { lazy, Suspense, useCallback, useContext, useState } from 'react'
 import PropTypes from 'prop-types'
+
 import format from 'date-fns/format'
+import axios from 'config/axios'
 
 import MUIDataTable from 'mui-datatables'
-
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import AddIcon from '@material-ui/icons/Add'
+import { ic_add as AddIcon } from 'react-icons-kit/md/ic_add'
+import { ic_delete as DeleteIcon } from 'react-icons-kit/md/ic_delete'
+import { ic_edit as EditIcon } from 'react-icons-kit/md/ic_edit'
 
-import AwardsForm from './components/awards'
-import BookForm from './components/book'
-import BookChapterForm from './components/book-chapter'
-import EditorialForm from './components/editorial'
-import EventForm from './components/event'
-import JournalForm from './components/journal'
+import Icon from 'components/icon'
 import Link from './components/table-link'
-import MediaForm from './components/media'
-import NewsForm from './components/news'
-import PatentForm from './components/patent'
-import ProceedingForm from './components/proceeding'
-import SoftwareForm from './components/software'
-import ThesisForm from './components/thesis'
+import HandleButtons from './components/handle-buttons'
 
 import { AuthContext } from 'contexts/auth'
+import { SnackbarContext } from 'contexts/snackbar'
 
 import FormDialog from 'layouts/dashboard/components/form-dialog'
 
@@ -36,25 +32,13 @@ const columns = [
     name: 'id',
     options: { display: 'excluded' }
   },
+  { name: 'title', label: 'Title' },
   {
-    name: 'title',
-    label: 'Title',
-    options: {
-      customBodyRender: (value, tableMeta) => {
-        const id = tableMeta.rowData[0]
-        const type = tableMeta.rowData[4]
-        const typeSlugged = type.split(' ').join('-')
-
-        return <Link to={`/${typeSlugged}/${id}`}>{value}</Link>
-      }
-    }
-  },
-  {
-    name: 'author_id',
+    name: 'authorId',
     options: { display: 'excluded' }
   },
   {
-    name: 'author_name',
+    name: 'authorName',
     label: 'Author',
     options: {
       customBodyRender: (value, tableMeta) => (
@@ -66,7 +50,7 @@ const columns = [
   },
   { name: 'type', label: 'Type' },
   {
-    name: 'created_at',
+    name: 'createdAt',
     label: 'Date',
     options: {
       customBodyRender: (value) => format(value, 'HH:mm DD/MM/YYYY')
@@ -84,50 +68,163 @@ const options = {
 }
 
 const forms = {
-  'Awards': { component: AwardsForm, onlyAdmin: false },
-  'Book': { component: BookForm, onlyAdmin: false },
-  'Book Chapter': { component: BookChapterForm, onlyAdmin: false },
-  'Editorial': { component: EditorialForm, onlyAdmin: false },
-  'Event': { component: EventForm, onlyAdmin: true },
-  'Journal': { component: JournalForm, onlyAdmin: false },
-  'Media': { component: MediaForm, onlyAdmin: true },
-  'News': { component: NewsForm, onlyAdmin: true },
-  'Patent': { component: PatentForm, onlyAdmin: false },
-  'Proceeding': { component: ProceedingForm, onlyAdmin: false },
-  'Software': { component: SoftwareForm, onlyAdmin: false },
-  'Thesis': { component: ThesisForm, onlyAdmin: false }
+  'Awards': {
+    component: lazy(() => import('./components/awards')),
+    onlyAdmin: false,
+    apiRoute: '/private/awards'
+  },
+  'Book': {
+    component: lazy(() => import('./components/book')),
+    onlyAdmin: false,
+    apiRoute: '/private/books'
+  },
+  'Book Chapter': {
+    component: lazy(() => import('./components/book-chapter')),
+    onlyAdmin: false,
+    apiRoute: '/private/book-chapter'
+  },
+  'Editorial': {
+    component: lazy(() => import('./components/editorial')),
+    onlyAdmin: false,
+    apiRoute: '/private/editorial'
+  },
+  'Event': {
+    component: lazy(() => import('./components/event')),
+    onlyAdmin: true,
+    apiRoute: '/private/event'
+  },
+  'Journal': {
+    component: lazy(() => import('./components/journal')),
+    onlyAdmin: false,
+    apiRoute: '/private/journal'
+  },
+  'Media': {
+    component: lazy(() => import('./components/media')),
+    onlyAdmin: true,
+    apiRoute: '/private/medias'
+  },
+  'News': {
+    component: lazy(() => import('./components/news')),
+    onlyAdmin: true,
+    apiRoute: '/private/news'
+  },
+  'Patent': {
+    component: lazy(() => import('./components/patent')),
+    onlyAdmin: false,
+    apiRoute: '/private/patent'
+  },
+  'Proceeding': {
+    component: lazy(() => import('./components/proceeding')),
+    onlyAdmin: false,
+    apiRoute: '/private/proceeding'
+  },
+  'Software': {
+    component: lazy(() => import('./components/software')),
+    onlyAdmin: false,
+    apiRoute: '/private/software'
+  },
+  'Thesis': {
+    component: lazy(() => import('./components/thesis')),
+    onlyAdmin: false,
+    apiRoute: '/private/thesis'
+  }
 }
 
 function Posts ({ classes }) {
   const { userInfo: { user } } = useContext(AuthContext)
+  const { showNotification } = useContext(SnackbarContext)
   const [form, setForm] = useState({
+    apiRoute: null,
     component: '',
     title: ''
   })
+  const [mode, setMode] = useState('ADD')
+  const [formData, setFormData] = useState({})
+  const [isFormValid, setFormValid] = useState(true)
+  const [isSubmittingForm, setSubmittingForm] = useState(false)
   const [isOpen, handleDialog] = useState(false)
-  const [tableData, setData] = useState([])
+  const [tableData, setTableData] = useState([])
   const [anchorEl, setAnchor] = useState()
 
   const handleClick = (e) => {
     if (!anchorEl) setAnchor(e.target)
+    setMode('ADD')
   }
+
   const handleClose = () => setAnchor(null)
+
   const openForm = (name) => () => {
     setForm({
+      apiRoute: forms[name].apiRoute,
       component: forms[name].component,
       title: name
     })
     handleDialog(true)
   }
 
-  const closeForm = () => handleDialog(false)
+  const closeForm = () => {
+    handleDialog(false)
+    setFormValid(true)
+    setFormData({})
+  }
 
-  useEffect(() => {
-    import('src/data/fake-data.json')
-      .then((data) => {
-        setData(data.default)
-      })
+  const fetchData = useCallback(async (id) => {
+    try {
+      const response = await axios.get(`${form.apiRoute}/${id}`).data
+      setFormData(response.data)
+    } catch {
+      showNotification('There was an error during table data fetching')
+    }
+  }, [form.apiRoute, showNotification])
+
+  const addRow = useCallback((data) => {
+    const { id, title, authorId, authorName, createdAt } = data
+    setTableData(tableData => [
+      { id, title, authorId, authorName, createdAt },
+      ...tableData
+    ])
   }, [])
+
+  const editRow = useCallback((data) => {
+    setTableData(tableData => (
+      tableData.map(row => {
+        return row.id === data.id
+          ? data
+          : row
+      })
+    ))
+  }, [])
+
+  const deleteRow = useCallback(async (data) => {
+    try {
+      await axios.delete(`${form.apiRoute}/${data.id}`)
+      setTableData(tableData => tableData.filter(row => row.id !== data.id))
+    } catch {
+      showNotification('There was an error during the post deleting')
+    }
+  }, [form.apiRoute, showNotification])
+
+  const submitForm = useCallback(async (data, errors) => {
+    if (errors !== undefined) return setFormValid(false)
+
+    const method = mode === 'ADD' ? 'post' : 'put'
+
+    try {
+      setSubmittingForm(true)
+      const response = await axios[method](form.apiRoute, data).data
+
+      if (mode === 'ADD') {
+        addRow(response.data)
+      } else {
+        editRow(response.data)
+      }
+    } catch {
+      showNotification('There was an error during form submitting')
+    } finally {
+      setSubmittingForm(false)
+      closeForm()
+    }
+  }, [form.apiRoute, addRow, editRow, mode, showNotification])
 
   return (
     <>
@@ -136,7 +233,23 @@ function Posts ({ classes }) {
         handleCloseDialog={closeForm}
         title={form.title}
       >
-        <form.component />
+        <Suspense fallback={<LinearProgress />}>
+          <form.component
+            closeForm={closeForm}
+            data={formData}
+            isSubmiting={isSubmittingForm}
+            isValid={isFormValid}
+            onSubmit={submitForm}
+            setFormData={setFormData}
+            setSubmiting={setSubmittingForm}
+            setValid={setFormValid}
+          >
+            <HandleButtons
+              disabled={!isFormValid || isSubmittingForm}
+              isSubmiting={isSubmittingForm}
+            />
+          </form.component>
+        </Suspense>
       </FormDialog>
 
       <div className={classes.toolbar}>
@@ -145,7 +258,7 @@ function Posts ({ classes }) {
           onClick={handleClick}
           variant='outlined'
         >
-          Add <AddIcon />
+          Add <Icon icon={AddIcon} />
         </Button>
 
         <Menu
@@ -166,10 +279,34 @@ function Posts ({ classes }) {
       </div>
 
       <MUIDataTable
-        columns={columns}
         data={tableData}
         options={options}
         title='Posts'
+        columns={[
+          ...columns,
+          {
+            name: 'actions',
+            label: 'Actions',
+            options: {
+              search: false,
+              customBodyRender: (_, tableMeta) => (
+                <>
+                  <IconButton onClick={() => {
+                    setMode('EDIT')
+                    setSubmittingForm(true)
+                    fetchData(tableMeta.rowsData[0])
+                    setSubmittingForm(false)
+                  }}>
+                    <Icon icon={EditIcon} />
+                  </IconButton>
+                  <IconButton onClick={() => deleteRow(tableMeta.rowData[0])}>
+                    <Icon icon={DeleteIcon} />
+                  </IconButton>
+                </>
+              )
+            }
+          }
+        ]}
       />
     </>
   )
