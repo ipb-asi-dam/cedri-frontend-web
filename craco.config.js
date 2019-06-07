@@ -21,6 +21,7 @@ const override = {
 
 const alias = {
   src: paths.src,
+  assets: join(paths.src, 'assets'),
   contexts: join(paths.src, 'contexts'),
   components: join(paths.src, 'components'),
   config: join(paths.src, 'config'),

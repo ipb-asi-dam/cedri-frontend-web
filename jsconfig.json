@@ -5,6 +5,7 @@
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "paths": {
+      "assets/*": ["./src/assets/*"],
       "contexts/*": ["./src/contexts/*"],
       "components/*": ["./src/components/*"],
       "config/*": ["./src/config/*"],
