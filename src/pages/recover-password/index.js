@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import axios from 'config/axios'
@@ -15,14 +15,18 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import RFTextField from 'components/text-field'
 import TimeoutRedirect from 'components/timeout-redirect'
 
+// context
+import { SnackbarContext } from 'contexts/snackbar'
+
 // utils
 import { email, required } from 'utils/validations'
 
 import styles from './styles'
 
 function RecoverPassword ({ classes }) {
+  const { showNotification } = useContext(SnackbarContext)
   const [isValid, setValid] = useState(true)
-  const [isSubmiting, setSubmiting] = useState(false)
+  const [isSubmitting, setSubmitting] = useState(false)
   const [wasSent, setSent] = useState(false)
 
   return (
@@ -34,13 +38,13 @@ function RecoverPassword ({ classes }) {
               Your request was sent, please check your email.
             </TimeoutRedirect>
           )}
-          {(isSubmiting && !wasSent) && (
+          {(isSubmitting && !wasSent) && (
             <>
               <h2>Sending request...</h2>
               <CircularProgress color='secondary' size={48} />
             </>
           )}
-          {(!isSubmiting && !wasSent) && (
+          {(!isSubmitting && !wasSent) && (
             <>
               <h2>Recover your password</h2>
               <Form
@@ -53,12 +57,14 @@ function RecoverPassword ({ classes }) {
                   if (errors !== undefined) return setValid(false)
 
                   try {
-                    setSubmiting(true)
+                    setSubmitting(true)
                     await axios.post('/public/recovery', data)
-                    setSubmiting(false)
                     setSent(true)
                   } catch {
-
+                    showNotification('There was an error, please try again!')
+                  } finally {
+                    setSubmitting(false)
+                    setSent(false)
                   }
                 }}
                 validation={{
@@ -69,7 +75,7 @@ function RecoverPassword ({ classes }) {
                   <RFTextField
                     autoComplete='email'
                     autoFocus
-                    isSubmiting={isSubmiting}
+                    disabled={isSubmitting}
                     label='Email'
                     margin='normal'
                     name='email'
@@ -77,7 +83,7 @@ function RecoverPassword ({ classes }) {
                   <Button
                     className={classes.button}
                     color='primary'
-                    disabled={!isValid || isSubmiting}
+                    disabled={!isValid || isSubmitting}
                     size='large'
                     type='submit'
                     variant='contained'
