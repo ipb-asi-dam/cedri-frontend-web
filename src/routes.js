@@ -1,33 +1,33 @@
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import DescriptionIcon from '@material-ui/icons/Description'
-// import CopyrightIcon from '@material-ui/icons/Copyright'
-// import LocalPlayIcon from '@material-ui/icons/LocalPlay'
-import GroupIcon from '@material-ui/icons/Group'
-import NotificationsIcon from '@material-ui/icons/Notifications'
-// import ForumIcon from '@material-ui/icons/Forum'
-// import SchoolIcon from '@material-ui/icons/School'
+import { lazy } from 'react'
 
-import DashboardPage from 'pages/dashboard'
-import NotificationsPage from 'pages/notifications'
-// import IntelectualProperty from 'pages/intelectual-property'
-import UsersPage from 'pages/users'
-import PeoplePage from 'pages/people'
-import PostsPage from 'pages/posts'
-// import PublicationsPage from 'pages/publications'
-// import CommunicationsPage from 'pages/communications'
-// import ThesisPage from 'pages/thesis'
-// import AwardsPage from 'pages/awards'
+import DashboardIcon from '@material-ui/icons/DashboardOutlined'
+import DescriptionIcon from '@material-ui/icons/DescriptionOutlined'
+import GroupIcon from '@material-ui/icons/GroupOutlined'
+import PersonIcon from '@material-ui/icons/PersonOutlined'
+
+export const mainRoutes = [
+  {
+    path: '/',
+    component: lazy(() => import('pages/main')),
+    layout: ''
+  },
+  {
+    path: '/about-us',
+    component: lazy(() => import('pages/about-us')),
+    layout: ''
+  }
+]
 
 export const dashboardRoutes = [
   {
     path: '/',
     name: 'Dashboard',
     icon: DashboardIcon,
-    component: DashboardPage,
+    component: lazy(() => import('pages/dashboard')),
     layout: '/dashboard',
     onlyAdmin: false
   },
-  {
+  /* {
     path: '/notifications',
     name: 'Notifications',
     icon: NotificationsIcon,
@@ -35,11 +35,12 @@ export const dashboardRoutes = [
     layout: '/dashboard',
     onlyAdmin: true
   },
+  */
   {
     path: '/people',
     name: 'People',
     icon: GroupIcon,
-    component: PeoplePage,
+    component: lazy(() => import('pages/people')),
     layout: '/dashboard',
     exact: true,
     onlyAdmin: true
@@ -48,55 +49,24 @@ export const dashboardRoutes = [
     path: '/users',
     name: 'Users',
     icon: GroupIcon,
-    component: UsersPage,
+    component: lazy(() => import('pages/users')),
     layout: '/dashboard',
     exact: true,
     onlyAdmin: true
-  }, /* {
-    path: '/intelectual-property',
-    name: 'Intelectual Property',
-    icon: CopyrightIcon,
-    component: IntelectualProperty,
-    layout: '/dashboard',
-    onlyAdmin: false
   },
-  {
-    path: '/thesis',
-    name: 'Thesis',
-    icon: SchoolIcon,
-    component: ThesisPage,
-    layout: '/dashboard',
-    onlyAdmin: false
-  },
-  {
-    path: '/awards',
-    name: 'Awards',
-    icon: LocalPlayIcon,
-    component: AwardsPage,
-    layout: '/dashboard',
-    onlyAdmin: false
-  },
-  {
-    path: '/publications',
-    name: 'Publications',
-    icon: DescriptionIcon,
-    component: PublicationsPage,
-    layout: '/dashboard',
-    onlyAdmin: false
-  },
-  {
-    path: '/communications',
-    name: 'Communications',
-    icon: ForumIcon,
-    component: CommunicationsPage,
-    layout: '/dashboard',
-    onlyAdmin: true
-  } */
   {
     path: '/posts',
     name: 'Posts',
     icon: DescriptionIcon,
-    component: PostsPage,
+    component: lazy(() => import('pages/posts')),
+    layout: '/dashboard',
+    onlyAdmin: false
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: lazy(() => import('pages/account')),
+    icon: PersonIcon,
     layout: '/dashboard',
     onlyAdmin: false
   }
