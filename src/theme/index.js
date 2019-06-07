@@ -1,8 +1,8 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
 
-import overrides from 'theme/overrides'
-import palette from 'theme/palette'
-import typography from 'theme/typography'
+import overrides from './overrides'
+import palette from './palette'
+import typography from './typography'
 
 export default createMuiTheme({
   palette,

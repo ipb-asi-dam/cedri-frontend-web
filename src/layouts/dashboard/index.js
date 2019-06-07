@@ -5,7 +5,6 @@ import compose from 'recompose/compose'
 
 // MUI components
 import Drawer from '@material-ui/core/Drawer'
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 
 // MUI helpers
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -21,7 +20,6 @@ import { AuthContext } from 'contexts/auth'
 
 // styles
 import styles from './styles'
-import theme from './theme'
 
 import { dashboardRoutes } from 'src/routes.js'
 
@@ -49,7 +47,7 @@ function DashboardLayout ({ classes, width }) {
   }, [])
 
   return (
-    <MuiThemeProvider theme={theme}>
+    <>
       <Header
         className={classNames(classes.topbar, {
           [classes.topbarShift]: applyShift
@@ -78,7 +76,7 @@ function DashboardLayout ({ classes, width }) {
       })}>
         <Routes />
       </main>
-    </MuiThemeProvider>
+    </>
   )
 }
 
