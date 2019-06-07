@@ -4,9 +4,9 @@ import TextField from '@material-ui/core/TextField'
 
 function RFTextField ({
   children,
+  disabled,
   error,
   inputProps,
-  isSubmiting,
   required,
   shrink,
   title,
@@ -20,7 +20,7 @@ function RFTextField ({
       helperText={error}
       InputProps={{ inputProps }}
       InputLabelProps={{ required, shrink }}
-      disabled={isSubmiting}
+      disabled={disabled}
       label={title}
       value={value || ''}
       variant='outlined'
@@ -32,7 +32,7 @@ function RFTextField ({
 }
 
 RFTextField.defaultProps = {
-  isSubmiting: false,
+  disabled: false,
   required: true,
   shrink: undefined,
   type: 'text'
@@ -40,9 +40,9 @@ RFTextField.defaultProps = {
 
 RFTextField.propTypes = {
   children: PropTypes.node,
+  disabled: PropTypes.bool,
   error: PropTypes.string,
   inputProps: PropTypes.object,
-  isSubmiting: PropTypes.bool,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   required: PropTypes.bool,

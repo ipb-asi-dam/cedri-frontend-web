@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import Visibility from '@material-ui/icons/Visibility'
-import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import { ic_visibility as Visibility } from 'react-icons-kit/md/ic_visibility'
+import { ic_visibility_off as VisibilityOff } from 'react-icons-kit/md/ic_visibility_off'
 
+import Icon from 'components/icon'
 import TextField from 'components/text-field'
 
 function TextFieldVisibility (props) {
@@ -21,7 +22,7 @@ function TextFieldVisibility (props) {
               aria-label='Toggle password visibility'
               onClick={toggleVisibility}
             >
-              {isHidden ? <Visibility /> : <VisibilityOff />}
+              <Icon icon={isHidden ? Visibility : VisibilityOff} />
             </IconButton>
           </InputAdornment>
         ) }}
