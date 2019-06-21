@@ -30,10 +30,10 @@ export function checkDate (prev, current) {
 }
 
 export function strongPassword (value) {
-  const oneNumberRegex = new RegExp(/.*[0-9].*/)
-  const specialCharRegex = new RegExp(/.*[~!@#$%\\^&*()\-_=+|[{]};:'",<.>\/?].*/)
+  const oneNumberRegex = /.*[0-9].*/g
+  const specialCharRegex = /.*[~!@#$%\\^&*\-_=+|[{()}\];:'",<.>/?].*/g
 
-  return matches(value, oneNumberRegex) && matches(value, specialCharRegex)
+  return !(matches(value, oneNumberRegex) && matches(value, specialCharRegex))
     ? 'Password must have at least one number and a special character'
     : null
 }
