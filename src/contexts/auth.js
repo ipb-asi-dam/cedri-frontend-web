@@ -1,60 +1,70 @@
-import React, { createContext, useCallback, useState } from 'react'
+import React, { createContext, useCallback, useContext, useState } from 'react'
 import t from 'prop-types'
 import axios from 'config/axios'
 import {
   getTokenContent,
   isAuthenticated,
   login as loginService,
-  logout as logoutService,
-  changeUserRole as changeUserRoleService
+  logout as logoutService
 } from 'services/auth'
+
+import { SnackbarContext } from 'contexts/snackbar'
 
 export const AuthContext = createContext()
 
 function Auth ({ children }) {
-  const [userInfo, setUser] = useState({
+  const { showNotification } = useContext(SnackbarContext)
+  const [userInfo, setUserInfo] = useState({
     user: getTokenContent(),
     isAuthenticated: isAuthenticated()
   })
 
+  const updateUserInfo = useCallback(async (id) => {
+    const response = await axios.get(`/private/users/${id}`)
+    const { file: _file, ...user } = response.data.data
+    const file = _file || {}
+
+    setUserInfo(userInfo => ({
+      ...userInfo,
+      user: {
+        ...user,
+        ...file,
+        imageURL: file.id
+          ? `${process.env.REACT_APP_API_URL}/public/images/${file.md5}`
+          : '//via.placeholder.com/100'
+      }
+    }))
+  }, [])
+
   const login = useCallback(async (data) => {
     try {
       const res = await axios.post('/public/authenticate', data)
-      loginService(res.data.token)
-      setUser({
-        user: getTokenContent(),
+      loginService(res.data.data.token)
+      setUserInfo({
+        user: {
+          id: getTokenContent().id
+        },
         isAuthenticated: isAuthenticated()
       })
     } catch (err) {
-      console.log(err)
+      showNotification('Error during login, please try again!')
     }
-  }, [])
+  }, [showNotification])
 
   const logout = useCallback(() => {
     logoutService()
-    setUser({
+    setUserInfo({
       user: null,
       isAuthenticated: false
     })
   }, [])
 
-  const changeUserRole = useCallback(() => {
-    changeUserRoleService()
-    setUser({
-      ...userInfo,
-      user: {
-        ...userInfo.user,
-        isAdmin: !userInfo.user.isAdmin
-      }
-    })
-  }, [userInfo])
-
   return (
     <AuthContext.Provider value={{
-      changeUserRole,
       login,
       logout,
-      userInfo
+      userInfo,
+      updateUserInfo
     }}>
       {children}
     </AuthContext.Provider>

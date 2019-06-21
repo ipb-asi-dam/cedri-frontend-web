@@ -10,7 +10,7 @@ export const getTokenContent = () => {
 
   return !tokenContent
     ? null
-    : JSON.parse(tokenContent).data
+    : JSON.parse(tokenContent)
 }
 
 export const isAuthenticated = () => !!getToken()
@@ -24,18 +24,4 @@ export function login (token) {
 export function logout () {
   localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(TOKEN_CONTENT)
-}
-
-export function changeUserRole () {
-  const content = JSON.parse(localStorage.getItem(TOKEN_CONTENT))
-
-  if (content) {
-    localStorage.setItem(TOKEN_CONTENT, JSON.stringify({
-      ...content,
-      data: {
-        ...content.data,
-        isAdmin: !content.data.isAdmin
-      }
-    }))
-  }
 }
