@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
 import classnames from 'clsx'
 
 import Form from 'react-vanilla-form'
@@ -9,7 +8,6 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import Slide from '@material-ui/core/Slide'
-import withStyles from '@material-ui/core/styles/withStyles'
 
 import { AuthContext } from 'contexts/auth'
 
@@ -20,9 +18,10 @@ import TextFieldVisibility from 'components/text-field-visibility'
 // utils
 import { email, required } from 'utils/validations'
 
-import styles from './styles'
+import useStyles from './styles'
 
-function Login ({ classes }) {
+function Login () {
+  const classes = useStyles()
   const { login } = useContext(AuthContext)
   const [isValid, setValid] = useState(true)
   const [isSubmitting, setSubmitting] = useState(false)
@@ -51,7 +50,11 @@ function Login ({ classes }) {
                     if (errors !== undefined) return setValid(false)
 
                     setSubmitting(true)
-                    await login(data)
+                    try {
+                      await login(data)
+                    } finally {
+                      setSubmitting(false)
+                    }
                   }}
                   validation={{
                     email: [required, email],
@@ -104,8 +107,4 @@ function Login ({ classes }) {
   )
 }
 
-Login.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-
-export default withStyles(styles)(Login)
+export default Login

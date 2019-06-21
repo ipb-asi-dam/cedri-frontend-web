@@ -1,4 +1,6 @@
-export default (theme) => ({
+import makeStyles from '@material-ui/core/styles/makeStyles'
+
+const styles = (theme) => ({
   button: {
     marginTop: theme.spacing(4),
     textTransform: 'uppercase',
@@ -37,3 +39,5 @@ export default (theme) => ({
     }
   }
 })
+
+export default makeStyles(styles)
