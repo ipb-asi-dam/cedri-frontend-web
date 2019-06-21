@@ -12,16 +12,16 @@ import SnackbarProvider from 'contexts/snackbar'
 import theme from 'theme'
 
 const Root = () => (
-  <AuthProvider>
-    <SnackbarProvider>
+  <SnackbarProvider>
+    <AuthProvider>
       <CssBaseline />
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Route component={App} />
         </BrowserRouter>
       </MuiThemeProvider>
-    </SnackbarProvider>
-  </AuthProvider>
+    </AuthProvider>
+  </SnackbarProvider>
 )
 
 export default hot(module)(Root)
