@@ -23,7 +23,6 @@ function RFTextField ({
       disabled={disabled}
       label={title}
       value={value || ''}
-      variant='outlined'
       {...props}
     >
       {children}
@@ -33,9 +32,10 @@ function RFTextField ({
 
 RFTextField.defaultProps = {
   disabled: false,
-  required: true,
+  required: false,
   shrink: undefined,
-  type: 'text'
+  type: 'text',
+  variant: 'outlined'
 }
 
 RFTextField.propTypes = {
