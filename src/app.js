@@ -6,30 +6,14 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { AuthContext } from 'contexts/auth'
 import { SnackbarContext } from 'contexts/snackbar'
 
+import PrivateRoute from 'components/private-route'
+
 const Dashboard = lazy(() => import('layouts/dashboard'))
 const Main = lazy(() => import('layouts/main'))
+
 const LoginPage = lazy(() => import('pages/login'))
-const PageNotFound = lazy(() => import('pages/page-not-found'))
+const NotFoundPage = lazy(() => import('pages/page-not-found'))
 const RecoverPage = lazy(() => import('pages/recover-password'))
-
-function PrivateRoute ({ component: Component, ...rest }) {
-  const { userInfo } = useContext(AuthContext)
-
-  return (
-    <Route
-      {...rest}
-      render={props => (
-        userInfo.isAuthenticated
-          ? <Component {...props} />
-          : <Redirect to='/login' />
-      )}
-    />
-  )
-}
-
-PrivateRoute.propTypes = {
-  component: t.oneOfType([t.func, t.object]).isRequired
-}
 
 function App ({ location }) {
   const { userInfo } = useContext(AuthContext)
@@ -44,9 +28,9 @@ function App ({ location }) {
       <Switch>
         <Route path='/login' component={LoginPage} />
         <Route path='/recover-password' component={RecoverPage} />
-        <Route path='/page-not-found' component={PageNotFound} />
+        <Route path='/page-not-found' component={NotFoundPage} />
         <PrivateRoute path='/dashboard' component={Dashboard} />
-        <Route path='/' component={Main} />
+        <Route component={Main} />
       </Switch>
       {notification}
     </Suspense>
