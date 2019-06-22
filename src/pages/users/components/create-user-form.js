@@ -10,13 +10,14 @@ import RFTextField from 'components/text-field'
 // utils
 import { required, email } from 'utils/validations'
 
-function CreateUserForm ({ children, isSubmiting, onSubmit, setData }) {
+function CreateUserForm ({ children, isSubmiting, onSubmit }) {
   return (
     <Form
       customErrorProp='error'
       data={{
         name: '',
         email: '',
+        type: 'im',
         isAdmin: false
       }}
       keepErrorOnFocus
@@ -43,6 +44,20 @@ function CreateUserForm ({ children, isSubmiting, onSubmit, setData }) {
           />
         </Grid>
         <Grid item xs={12}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Type'
+            name='type'
+            select
+            SelectProps={{ native: true }}
+          >
+            <option value='im'>Integrated Members</option>
+            <option value='rf'>Research Fellowships</option>
+            <option value='c'>Collaborators</option>
+            <option value='vr'>Visiting Researchers</option>
+          </RFTextField>
+        </Grid>
+        <Grid item xs={12}>
           <label htmlFor='isAdmin'>
             <input
               disabled={isSubmiting}
@@ -61,8 +76,7 @@ function CreateUserForm ({ children, isSubmiting, onSubmit, setData }) {
 CreateUserForm.propTypes = {
   children: PropTypes.node,
   isSubmiting: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  setData: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired
 }
 
 export default CreateUserForm
