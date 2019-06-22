@@ -1,106 +1,51 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
-import classnames from 'clsx'
 
-import Form from 'react-vanilla-form'
-
-import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import Slide from '@material-ui/core/Slide'
 
 import { AuthContext } from 'contexts/auth'
+import { SnackbarContext } from 'contexts/snackbar'
 
-// components
-import RFTextField from 'components/text-field'
-import TextFieldVisibility from 'components/text-field-visibility'
-
-// utils
-import { email, required } from 'utils/validations'
+import LoginForm from './components/form'
+import Submitting from 'components/submitting'
 
 import useStyles from './styles'
 
 function Login () {
   const classes = useStyles()
   const { login } = useContext(AuthContext)
+  const { showNotification } = useContext(SnackbarContext)
+
   const [isValid, setValid] = useState(true)
   const [isSubmitting, setSubmitting] = useState(false)
+
+  async function onSubmit (data, errors) {
+    if (errors !== undefined) return setValid(false)
+
+    try {
+      setSubmitting(true)
+      await login(data)
+    } catch {
+      showNotification('There was something wrong, please try again')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div className={classes.container}>
       <Slide direction='right' in mountOnEnter unmountOnExit>
         <Paper className={classes.card} elevation={3}>
-          {isSubmitting
-            ? (
-              <>
-                <h2>Sending request...</h2>
-                <CircularProgress color='secondary' size={48} />
-              </>
-            )
-            : (
-              <>
-                <h2>Login to your account</h2>
-                <Form
-                  customErrorProp='error'
-                  keepErrorOnFocus
-                  onChange={(_, errors) => {
-                    if (!Object.keys(errors).length) setValid(true)
-                  }}
-                  onSubmit={async (data, errors) => {
-                    if (errors !== undefined) return setValid(false)
-
-                    setSubmitting(true)
-                    try {
-                      await login(data)
-                    } finally {
-                      setSubmitting(false)
-                    }
-                  }}
-                  validation={{
-                    email: [required, email],
-                    password: required
-                  }}
-                >
-                  <div className={classes.flex}>
-                    <RFTextField
-                      autoComplete='email'
-                      autoFocus
-                      disabled={isSubmitting}
-                      label='Email'
-                      margin='normal'
-                      name='email'
-                    />
-                    <TextFieldVisibility
-                      autoComplete='password'
-                      disabled={isSubmitting}
-                      label='Password'
-                      margin='normal'
-                      name='password'
-                      type='password'
-                    />
-                    <Link
-                      className={classnames('forget-password', classes.link)}
-                      to='/recover-password'
-                    >
-                      Forgot your password?
-                    </Link>
-                    <Button
-                      className={classes.button}
-                      color='primary'
-                      disabled={!isValid || isSubmitting}
-                      size='large'
-                      type='submit'
-                      variant='contained'
-                    >
-                      Login
-                    </Button>
-                    <Link className={classes.link} to='/'>
-                      Back to home page
-                    </Link>
-                  </div>
-                </Form>
-              </>
-            )}
+          {isSubmitting && <Submitting />}
+          {!isSubmitting && (
+            <LoginForm
+              classes={classes}
+              isSubmitting={isSubmitting}
+              isValid={isValid}
+              onSubmit={onSubmit}
+              setValid={setValid}
+            />
+          )}
         </Paper>
       </Slide>
     </div>
