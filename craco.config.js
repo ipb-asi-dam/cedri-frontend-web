@@ -10,13 +10,11 @@ const paths = {
 const override = {
   development: {
     'react-dom': '@hot-loader/react-dom'
-  }
-  /* Waiting for next update of Preact with Suspense support
+  },
   production: {
     react: 'preact/compat',
     'react-dom': 'preact/compat'
   }
-  */
 }
 
 const alias = {
@@ -27,7 +25,6 @@ const alias = {
   config: join(paths.src, 'config'),
   layouts: join(paths.src, 'layouts'),
   pages: join(paths.src, 'pages'),
-  reducers: join(paths.src, 'redux-flow', 'reducers'),
   services: join(paths.src, 'services'),
   theme: join(paths.src, 'theme'),
   utils: join(paths.src, 'utils'),
