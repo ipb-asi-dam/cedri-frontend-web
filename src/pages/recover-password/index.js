@@ -1,33 +1,89 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import axios from 'config/axios'
 
-import Form from 'react-vanilla-form'
-
-import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import Slide from '@material-ui/core/Slide'
-import withStyles from '@material-ui/core/styles/withStyles'
 
-// components
-import RFTextField from 'components/text-field'
-import TimeoutRedirect from 'components/timeout-redirect'
-
-// context
 import { SnackbarContext } from 'contexts/snackbar'
 
-// utils
-import { email, required } from 'utils/validations'
+import TimeoutRedirect from 'components/timeout-redirect'
+import TextField from 'components/text-field'
+import TextFieldVisibility from 'components/text-field-visibility'
 
-import styles from './styles'
+import RecoverPasswordForm from './components/form'
 
-function RecoverPassword ({ classes }) {
+import { email, passwordLength, required, strongPassword } from 'utils/validations'
+
+import useStyles from './styles'
+
+const queryParamsRegex = /\??(token+=.+)&?/g
+
+function RecoverPassword ({ location }) {
+  const classes = useStyles()
   const { showNotification } = useContext(SnackbarContext)
+
   const [isValid, setValid] = useState(true)
+  const [queryParam, setQueryParam] = useState('')
   const [isSubmitting, setSubmitting] = useState(false)
   const [wasSent, setSent] = useState(false)
+  const [validation, setValidation] = useState({})
+
+  useEffect(() => {
+    const query = location.search || ''
+    const matchedQuery = query.match(queryParamsRegex)
+    setQueryParam(matchedQuery ? matchedQuery.join('') : '')
+
+    if (matchedQuery) {
+      setValidation({ password: [required, passwordLength, strongPassword] })
+    } else {
+      setValidation({ email: [required, email] })
+    }
+  }, [location])
+
+  async function onSubmit (data, errors) {
+    if (errors !== undefined) return setValid(false)
+
+    try {
+      const method = queryParam ? 'put' : 'post'
+      setSubmitting(true)
+
+      const response = await axios[method](`/public/recover?${queryParam}`, data)
+
+      setSent(true)
+      showNotification(response.data.data.message)
+    } catch {
+      showNotification('There was an error, please try again!')
+    } finally {
+      setSubmitting(false)
+      setSent(false)
+    }
+  }
+
+  const formsChildren = (
+    <>
+      {queryParam && (
+        <TextFieldVisibility
+          autoFocus
+          disabled={isSubmitting}
+          label='New Password'
+          margin='normal'
+          name='password'
+        />
+      )}
+      {!queryParam && (
+        <TextField
+          autoComplete='email'
+          autoFocus
+          disabled={isSubmitting}
+          label='Email'
+          margin='normal'
+          name='email'
+        />
+      )}
+    </>
+  )
 
   return (
     <div className={classes.container}>
@@ -45,57 +101,16 @@ function RecoverPassword ({ classes }) {
             </>
           )}
           {(!isSubmitting && !wasSent) && (
-            <>
-              <h2>Recover your password</h2>
-              <Form
-                customErrorProp='error'
-                keepErrorOnFocus
-                onChange={(_, errors) => {
-                  if (!Object.keys(errors).length) setValid(true)
-                }}
-                onSubmit={async (data, errors) => {
-                  if (errors !== undefined) return setValid(false)
-
-                  try {
-                    setSubmitting(true)
-                    await axios.post('/public/recovery', data)
-                    setSent(true)
-                  } catch {
-                    showNotification('There was an error, please try again!')
-                  } finally {
-                    setSubmitting(false)
-                    setSent(false)
-                  }
-                }}
-                validation={{
-                  email: [required, email]
-                }}
-              >
-                <div className={classes.flex}>
-                  <RFTextField
-                    autoComplete='email'
-                    autoFocus
-                    disabled={isSubmitting}
-                    label='Email'
-                    margin='normal'
-                    name='email'
-                  />
-                  <Button
-                    className={classes.button}
-                    color='primary'
-                    disabled={!isValid || isSubmitting}
-                    size='large'
-                    type='submit'
-                    variant='contained'
-                  >
-                      Submit
-                  </Button>
-                  <Link className={classes.link} to='/login'>
-                    Back to login
-                  </Link>
-                </div>
-              </Form>
-            </>
+            <RecoverPasswordForm
+              children={formsChildren}
+              classes={classes}
+              isSubmitting={isSubmitting}
+              isValid={isValid}
+              onSubmit={onSubmit}
+              queryParam={queryParam}
+              setValid={setValid}
+              validation={validation}
+            />
           )}
         </Paper>
       </Slide>
@@ -104,7 +119,7 @@ function RecoverPassword ({ classes }) {
 }
 
 RecoverPassword.propTypes = {
-  classes: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(RecoverPassword)
+export default RecoverPassword
