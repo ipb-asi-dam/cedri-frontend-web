@@ -73,30 +73,10 @@ const forms = {
     onlyAdmin: false,
     apiRoute: '/private/awards'
   },
-  'Book': {
-    component: lazy(() => import('./components/book')),
-    onlyAdmin: false,
-    apiRoute: '/private/books'
-  },
-  'Book Chapter': {
-    component: lazy(() => import('./components/book-chapter')),
-    onlyAdmin: false,
-    apiRoute: '/private/book-chapter'
-  },
-  'Editorial': {
-    component: lazy(() => import('./components/editorial')),
-    onlyAdmin: false,
-    apiRoute: '/private/editorial'
-  },
   'Event': {
     component: lazy(() => import('./components/event')),
     onlyAdmin: true,
-    apiRoute: '/private/event'
-  },
-  'Journal': {
-    component: lazy(() => import('./components/journal')),
-    onlyAdmin: false,
-    apiRoute: '/private/journal'
+    apiRoute: '/private/events'
   },
   'Media': {
     component: lazy(() => import('./components/media')),
@@ -111,12 +91,17 @@ const forms = {
   'Patent': {
     component: lazy(() => import('./components/patent')),
     onlyAdmin: false,
-    apiRoute: '/private/patent'
+    apiRoute: '/private/patents'
   },
-  'Proceeding': {
-    component: lazy(() => import('./components/proceeding')),
+  'Project': {
+    component: lazy(() => import('./components/projects')),
     onlyAdmin: false,
-    apiRoute: '/private/proceeding'
+    apiRoute: '/private/projects'
+  },
+  'Publication': {
+    component: lazy(() => import('./components/publication')),
+    onlyAdmin: false,
+    apiRoute: '/private/publications'
   },
   'Software': {
     component: lazy(() => import('./components/software')),
@@ -126,7 +111,7 @@ const forms = {
   'Thesis': {
     component: lazy(() => import('./components/thesis')),
     onlyAdmin: false,
-    apiRoute: '/private/thesis'
+    apiRoute: '/private/theses'
   }
 }
 
@@ -224,7 +209,7 @@ function Posts ({ classes }) {
       setSubmittingForm(false)
       closeForm()
     }
-  }, [form.apiRoute, addRow, editRow, mode, showNotification])
+  }, [mode, form.apiRoute, addRow, editRow, showNotification])
 
   return (
     <>
