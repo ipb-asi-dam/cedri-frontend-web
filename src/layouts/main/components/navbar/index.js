@@ -41,8 +41,13 @@ function Navbar ({ classes, isMobile, items, toggleDrawer }) {
           width: '100%'
         }}>
           <div hidden={isMobile}>
-            {items.map(({ title, path }) => (
-              <NavLink key={path} className={classes.navItem} to={path}>
+            {items.map(({ title, path }) => title && (
+              <NavLink
+                activeClassName={classes.navItemActive}
+                className={classes.navItem}
+                key={path}
+                to={path}
+              >
                 {title}
               </NavLink>
             ))}
