@@ -27,7 +27,6 @@ function Login () {
       await login(data)
     } catch {
       showNotification('There was something wrong, please try again')
-    } finally {
       setSubmitting(false)
     }
   }
