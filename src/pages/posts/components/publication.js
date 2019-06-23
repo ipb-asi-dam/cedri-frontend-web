@@ -7,24 +7,15 @@ import Form from 'react-vanilla-form'
 import RFTextField from 'components/text-field'
 
 // utils
-import { checkDate, required, url } from 'utils/validations'
-import format from 'date-fns/format'
+import { required, url } from 'utils/validations'
 
-const minDate = format(new Date(2000, 0), 'YYYY-MM-DD')
-const dateProps = { min: minDate }
-
-function ProjectsForm ({
+function PublicationForm ({
   children,
   data,
   isSubmiting,
   onSubmit,
   setValid
 }) {
-  data = Object.keys(data).length === 0 ? {
-    type: 'international',
-    isAccepted: true
-  } : data
-
   return (
     <Form
       customErrorProp='error'
@@ -35,17 +26,12 @@ function ProjectsForm ({
       }}
       onSubmit={onSubmit}
       validation={{
-        consortium: [required],
-        description: [required],
-        endDate: [required],
-        fundedBy: [required],
-        startDate: [
-          required,
-          checkDate(data.startDate, data.endDate)
-        ],
+        authors: [required],
+        sourceTitle: [required],
         title: [required],
         type: [required],
-        url: [url]
+        url: [required, url],
+        year: [required]
       }}
     >
       <Grid container spacing={2}>
@@ -62,17 +48,9 @@ function ProjectsForm ({
         <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
-            label='Description'
+            label='Authors'
             margin='normal'
-            name='description'
-            required
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Consortium'
-            name='consortium'
+            name='authors'
             required
           />
         </Grid>
@@ -81,36 +59,75 @@ function ProjectsForm ({
             disabled={isSubmiting}
             label='URL'
             name='url'
+            required
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <RFTextField
             disabled={isSubmiting}
-            label='Funded by'
-            name='fundedBy'
+            label='DOI'
+            name='doi'
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Issue'
+            name='issue'
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Indexed'
+            name='indexed'
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Source Title'
+            name='sourceTitle'
             required
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            inputProps={dateProps}
             disabled={isSubmiting}
-            label='Start Date'
-            name='startDate'
-            type='date'
-            required
-            shrink
+            label='Start Page'
+            name='startPage'
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
-            inputProps={dateProps}
             disabled={isSubmiting}
-            label='End Date'
-            name='endDate'
-            type='date'
-            required
+            label='End Page'
+            name='endPage'
+          />
+        </Grid>
+        <Grid item xs={6} sm={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            inputProps={{ min: 1990, max: new Date().getFullYear() }}
+            label='Year'
+            name='year'
+            type='number'
             shrink
+            required
+          />
+        </Grid>
+        <Grid item xs={6} sm={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Volume'
+            name='volume'
+          />
+        </Grid>
+        <Grid item xs={6} sm={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Art. Nº'
+            name='artNumber'
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -124,9 +141,11 @@ function ProjectsForm ({
             shrink
           >
             {[
-              { label: 'International', value: 'international' },
-              { label: 'National', value: 'national' },
-              { label: 'Other', value: 'other' }
+              { label: 'Book', value: 'b' },
+              { label: 'Book chapter', value: 'bc' },
+              { label: 'Editorial', value: 'e' },
+              { label: 'Journal', value: 'j' },
+              { label: 'Proceeding', value: 'p' }
             ].map(({ label, value }) => (
               <option key={value} value={value}>
                 {label}
@@ -134,19 +153,19 @@ function ProjectsForm ({
             ))}
           </RFTextField>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <label htmlFor='isAccepted'>
-            <input type='checkbox' name='isAccepted' />
-            Approved?
-          </label>
-        </Grid>
       </Grid>
       {children}
     </Form>
   )
 }
 
-ProjectsForm.propTypes = {
+PublicationForm.defaultProps = {
+  data: {
+    type: 'b'
+  }
+}
+
+PublicationForm.propTypes = {
   children: PropTypes.node.isRequired,
   data: PropTypes.object.isRequired,
   isSubmiting: PropTypes.bool.isRequired,
@@ -154,4 +173,4 @@ ProjectsForm.propTypes = {
   setValid: PropTypes.func.isRequired
 }
 
-export default ProjectsForm
+export default PublicationForm

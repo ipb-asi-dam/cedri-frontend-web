@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
@@ -7,21 +7,20 @@ import Form from 'react-vanilla-form'
 import RFTextField from 'components/text-field'
 
 // utils
+import format from 'date-fns/format'
 import { required } from 'utils/validations'
 
 function AwardForm ({
   children,
+  data,
   isSubmiting,
-  setSubmiting,
+  onSubmit,
   setValid
 }) {
-  const [data, setFormData] = useState({})
-
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData({})
-  }, [setValid, setSubmiting])
+  data = {
+    ...data,
+    date: format(data.date, 'YYYY-MM')
+  }
 
   return (
     <Form
@@ -31,17 +30,8 @@ function AwardForm ({
       onChange={(_, errors) => {
         if (!Object.keys(errors).length) setValid(true)
       }}
-      onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
-
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
-      }}
+      onSubmit={onSubmit}
       validation={{
-        event: required,
         date: required,
         prizeWinners: required,
         title: required
@@ -55,6 +45,7 @@ function AwardForm ({
             label='Title'
             margin='normal'
             name='title'
+            required
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -65,21 +56,31 @@ function AwardForm ({
             name='event'
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Prize Winners'
-            name='prizeWinners'
-            placeholder='The prizes must be separated by comma'
-          />
-        </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Publication Date'
             name='date'
             type='month'
+            required
             shrink
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Address'
+            name='address'
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Prize Winners'
+            multiline
+            name='prizeWinners'
+            rows={2}
+            required
           />
         </Grid>
       </Grid>
@@ -90,8 +91,9 @@ function AwardForm ({
 
 AwardForm.propTypes = {
   children: PropTypes.node.isRequired,
+  data: PropTypes.object.isRequired,
   isSubmiting: PropTypes.bool.isRequired,
-  setSubmiting: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setValid: PropTypes.func.isRequired
 }
 

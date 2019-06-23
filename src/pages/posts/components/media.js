@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
@@ -14,35 +14,18 @@ function MediaForm ({
   children,
   initialData,
   isSubmiting,
-  setSubmiting,
+  onSubmit,
   setValid
 }) {
-  const [data, setFormData] = useState(initialData)
-
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData(initialData)
-  }, [initialData, setSubmiting, setValid])
-
   return (
     <Form
       customErrorProp='error'
-      data={data}
+      data={initialData}
       keepErrorOnFocus
       onChange={(data, errors) => {
         if (!Object.keys(errors).length) setValid(true)
       }}
-      onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
-
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
-      }}
-      validateOn='change'
+      onSubmit={onSubmit}
       validation={{
         description: required,
         link: [required, url],
@@ -86,7 +69,7 @@ MediaForm.propTypes = {
   children: PropTypes.node.isRequired,
   initialData: PropTypes.object,
   isSubmiting: PropTypes.bool.isRequired,
-  setSubmiting: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setValid: PropTypes.func.isRequired
 }
 

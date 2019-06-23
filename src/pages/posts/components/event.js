@@ -1,62 +1,44 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
 
 // components
 import RFTextField from 'components/text-field'
+import TextEditor from 'components/text-editor'
 
 // utils
-import { checkDate, required, url } from 'utils/validations'
+import { checkDate, required } from 'utils/validations'
 import format from 'date-fns/format'
 
-const minDate = format(new Date(2000, 1, 1), 'YYYY-MM-DD')
+const minDate = format(new Date(2000, 0), 'YYYY-MM-DD')
 
 const dateProps = { min: minDate }
 
 function EventForm ({
   children,
+  data,
   isSubmiting,
-  setSubmiting,
+  onSubmit,
   setValid
 }) {
-  const [data, setFormData] = useState({})
-
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData({})
-  }, [setSubmiting, setValid])
-
   return (
     <Form
       customErrorProp='error'
       data={data}
       keepErrorOnFocus
-      onChange={(data, errors) => {
-        setFormData(data)
-
+      onChange={(_, errors) => {
         if (!Object.keys(errors).length) setValid(true)
       }}
-      onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
-
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
-      }}
-      validateOn='change'
+      onSubmit={onSubmit}
       validation={{
-        beginDate: [
+        address: required,
+        endDate: required,
+        links: required,
+        startDate: [
           required,
-          checkDate(data.beginDate, data.endDate)
-        ],
-        endDate: [required],
-        link: [required, url],
-        local: required,
-        name: required
+          checkDate(data.startDate, data.endDate)
+        ]
       }}
     >
       <Grid container spacing={2}>
@@ -64,42 +46,47 @@ function EventForm ({
           <RFTextField
             autoFocus
             disabled={isSubmiting}
-            label='Name'
-            name='name'
+            label='Title'
+            name='title'
+            required
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
-            label='Local'
-            name='local'
+            label='Address'
+            name='address'
+            required
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Link'
-            name='link'
-          />
-        </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12} md={6}>
           <RFTextField
             inputProps={dateProps}
             disabled={isSubmiting}
-            label='Begin Date'
-            name='beginDate'
-            type='date'
+            label='Start Date'
+            name='startDate'
+            required
             shrink
+            type='date'
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12} md={6}>
           <RFTextField
-            inputProps={dateProps}
             disabled={isSubmiting}
+            inputProps={dateProps}
             label='End Date'
             name='endDate'
-            type='date'
+            required
             shrink
+            type='date'
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextEditor
+            disabled={isSubmiting}
+            label='Links'
+            name='links'
+            required
           />
         </Grid>
       </Grid>
@@ -108,10 +95,15 @@ function EventForm ({
   )
 }
 
+EventForm.defaultProps = {
+  data: {}
+}
+
 EventForm.propTypes = {
   children: PropTypes.node.isRequired,
+  data: PropTypes.object.isRequired,
   isSubmiting: PropTypes.bool.isRequired,
-  setSubmiting: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setValid: PropTypes.func.isRequired
 }
 

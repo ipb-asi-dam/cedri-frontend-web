@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
@@ -8,20 +8,22 @@ import RFTextField from 'components/text-field'
 
 // utils
 import { required } from 'utils/validations'
+import InputLabel from '@material-ui/core/InputLabel'
+import InputBase from '@material-ui/core/InputBase'
 
 function SoftwareForm ({
   children,
+  data,
   isSubmiting,
-  setSubmiting,
+  onSubmit,
   setValid
 }) {
-  const [data, setFormData] = useState({})
+  const imageRef = useRef()
+  const [image, setImage] = useState()
 
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData({})
-  }, [setSubmiting, setValid])
+  function handleOnChangeImage (e) {
+    setImage(e.target.files[0])
+  }
 
   return (
     <Form
@@ -32,58 +34,51 @@ function SoftwareForm ({
         if (!Object.keys(errors).length) setValid(true)
       }}
       onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
+        const content = new FormData()
 
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
+        content.append('image', image)
+
+        Object
+          .entries(data)
+          .forEach(([key, val]) => {
+            content.append(key, val)
+          })
+
+        onSubmit(content, errors)
       }}
-      validateOn='change'
       validation={{
         description: required,
-        prizeWinners: required,
-        title: required,
-        year: required
+        title: required
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             autoFocus
             disabled={isSubmiting}
             label='Title'
             margin='normal'
             name='title'
+            required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             disabled={isSubmiting}
             label='Description'
             margin='normal'
+            multiline
             name='description'
+            required
+            rows={3}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Prize Winners'
-            name='prizeWinners'
-            placeholder='The prizes must be separated by comma'
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Year'
-            name='year'
-            type='number'
-            inputProps={{
-              min: 2000,
-              max: new Date().getFullYear()
-            }}
+        <Grid item xs={12}>
+          <InputLabel>Image</InputLabel>
+          <InputBase
+            onChange={handleOnChangeImage}
+            ref={imageRef}
+            type='file'
           />
         </Grid>
       </Grid>
@@ -94,8 +89,9 @@ function SoftwareForm ({
 
 SoftwareForm.propTypes = {
   children: PropTypes.node.isRequired,
+  data: PropTypes.object,
   isSubmiting: PropTypes.bool.isRequired,
-  setSubmiting: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setValid: PropTypes.func.isRequired
 }
 

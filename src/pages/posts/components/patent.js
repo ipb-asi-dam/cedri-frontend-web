@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
 
 // components
+import TextEditor from 'components/text-editor'
 import RFTextField from 'components/text-field'
 
 // utils
@@ -11,18 +12,11 @@ import { required } from 'utils/validations'
 
 function PatentForm ({
   children,
+  data,
   isSubmiting,
-  setSubmiting,
+  onSubmit,
   setValid
 }) {
-  const [data, setFormData] = useState({})
-
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData({})
-  }, [setSubmiting, setValid])
-
   return (
     <Form
       customErrorProp='error'
@@ -31,15 +25,7 @@ function PatentForm ({
       onChange={(_, errors) => {
         if (!Object.keys(errors).length) setValid(true)
       }}
-      onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
-
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
-      }}
+      onSubmit={onSubmit}
       validation={{
         authors: required,
         patentNumbers: required,
@@ -65,13 +51,11 @@ function PatentForm ({
             placeholder='The authors must be separated by comma'
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <RFTextField
+        <Grid item xs={12}>
+          <TextEditor
             disabled={isSubmiting}
             label='Patent Numbers'
-            margin='normal'
             name='patentNumbers'
-            placeholder='The patent numbers must be separated by comma'
           />
         </Grid>
       </Grid>
@@ -80,10 +64,15 @@ function PatentForm ({
   )
 }
 
+PatentForm.defaultProps = {
+  data: {}
+}
+
 PatentForm.propTypes = {
   children: PropTypes.node.isRequired,
+  data: PropTypes.object,
   isSubmiting: PropTypes.bool.isRequired,
-  setSubmiting: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setValid: PropTypes.func.isRequired
 }
 

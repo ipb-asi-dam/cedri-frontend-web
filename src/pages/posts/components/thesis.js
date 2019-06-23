@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
@@ -11,17 +11,16 @@ import { required } from 'utils/validations'
 
 function ThesisForm ({
   children,
+  data,
   isSubmiting,
-  setSubmiting,
+  onSubmit,
   setValid
 }) {
-  const [data, setFormData] = useState({})
-
-  const resetForm = useCallback(() => {
-    setSubmiting(false)
-    setValid(true)
-    setFormData({})
-  }, [setSubmiting, setValid])
+  data = Object.keys(data).length === 0 ? {
+    ...data,
+    type: 'msc',
+    completed: false
+  } : data
 
   return (
     <Form
@@ -31,22 +30,14 @@ function ThesisForm ({
       onChange={(_, errors) => {
         if (!Object.keys(errors).length) setValid(true)
       }}
-      onSubmit={(data, errors) => {
-        if (errors !== undefined) return setValid(false)
-
-        setSubmiting(true)
-        setTimeout(() => {
-          setFormData(data)
-          resetForm()
-        }, 2500)
-      }}
+      onSubmit={onSubmit}
       validation={{
-        course: required,
+        grade: required,
         date: required,
-        instituion: required,
-        studentName: required,
+        institute: required,
+        student: required,
         supervisors: required,
-        theseType: required,
+        type: required,
         title: required
       }}
     >
@@ -58,14 +49,16 @@ function ThesisForm ({
             label='Title'
             margin='normal'
             name='title'
+            required
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
-            label='Course'
+            label='Grade'
             margin='normal'
-            name='course'
+            name='grade'
+            required
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -73,41 +66,38 @@ function ThesisForm ({
             disabled={isSubmiting}
             label='Student Name'
             margin='normal'
-            name='studentName'
+            name='student'
+            required
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
-            label='Instituion'
+            label='Institute'
             margin='normal'
-            name='instituion'
+            name='institute'
+            required
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
-            label='These Type'
+            label='Type'
             margin='normal'
-            name='theseType'
+            name='type'
+            required
             select
             SelectProps={{ native: true }}
             shrink
           >
-            {[
-              { label: 'Msc', value: 'msc' },
-              { label: 'PhD', value: 'phd' }
-            ].map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
+            <option value='msc'>Msc</option>
+            <option value='phd'>PhD</option>
           </RFTextField>
         </Grid>
         <Grid item xs={6} sm={4}>
           <RFTextField
             disabled={isSubmiting}
-            label='Delivery Date'
+            label='Date'
             margin='normal'
             name='date'
             type='month'
@@ -120,8 +110,18 @@ function ThesisForm ({
             label='Supervisors'
             margin='normal'
             name='supervisors'
-            placeholder='The supervisors must be separated by comma'
+            required
           />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <label htmlFor='completed'>
+            <input
+              disabled={isSubmiting}
+              type='checkbox'
+              name='completed'
+            />
+            Completed?
+          </label>
         </Grid>
       </Grid>
       {children}
@@ -131,8 +131,9 @@ function ThesisForm ({
 
 ThesisForm.propTypes = {
   children: PropTypes.node.isRequired,
+  data: PropTypes.object,
   isSubmiting: PropTypes.bool.isRequired,
-  setSubmiting: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   setValid: PropTypes.func.isRequired
 }
 
