@@ -1,19 +1,19 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import t from 'prop-types'
+import { Route } from 'react-router-dom'
 import classNames from 'clsx'
-import compose from 'recompose/compose'
 
 // MUI components
 import Drawer from '@material-ui/core/Drawer'
 
 // MUI helpers
-import withStyles from '@material-ui/core/styles/withStyles'
-import withWidth from '@material-ui/core/withWidth'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useTheme from '@material-ui/core/styles/useTheme'
 
 // core components
 import Header from './components/navbar'
 import Sidebar from './components/sidebar'
-import Routes from './components/routes'
+import LazyRoutes from 'components/lazy-routes'
 
 // contexts
 import { AuthContext } from 'contexts/auth'
@@ -21,25 +21,32 @@ import { AuthContext } from 'contexts/auth'
 // styles
 import styles from './styles'
 
-import { dashboardRoutes } from 'src/routes.js'
+import routes from './routes'
 
-const smBreakpoints = ['xs', 'sm', 'md']
+const useStyles = makeStyles(styles)
 
-function DashboardLayout ({ classes, width }) {
-  const { userInfo, logout } = useContext(AuthContext)
-  const [filteredRoutes, setRoutes] = useState(dashboardRoutes)
+function DashboardLayout () {
+  const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
+  const { logout, updateUserInfo, userInfo: { user } } = useContext(AuthContext)
+  const [filteredRoutes, setRoutes] = useState(routes)
   const [currentRoute, setRoute] = useState({ name: 'Home' })
   const [isOpen, toggleDrawer] = useState(true)
 
   const handleDrawerToggle = useCallback(() => toggleDrawer(!isOpen), [isOpen])
 
-  const isMobile = smBreakpoints.includes(width)
   const applyShift = isOpen && !isMobile
 
   useEffect(() => {
-    setRoutes(dashboardRoutes
-      .filter(({ onlyAdmin }) => !onlyAdmin || (onlyAdmin && userInfo.user.isAdmin)))
-  }, [userInfo])
+    (async () => {
+      await updateUserInfo(user.id)
+    })()
+
+    setRoutes(routes
+      .filter(({ onlyAdmin }) => !onlyAdmin || (onlyAdmin && user.isAdmin)))
+  }, [updateUserInfo, user.id, user.isAdmin])
 
   const handleRouteChange = useCallback((name) => () => {
     window.scrollTo(0, 0)
@@ -56,7 +63,6 @@ function DashboardLayout ({ classes, width }) {
         isDrawerOpen={isOpen}
         onDrawerToggle={handleDrawerToggle}
         title={currentRoute.name}
-        userInfo={userInfo}
       />
       <Drawer
         anchor='left'
@@ -69,23 +75,22 @@ function DashboardLayout ({ classes, width }) {
           className={classes.sidebar}
           onChangeRoute={handleRouteChange}
           routes={filteredRoutes}
+          user={user}
         />
       </Drawer>
       <main className={classNames(classes.content, {
         [classes.contentShift]: applyShift
       })}>
-        <Routes />
+        <LazyRoutes routes={routes}>
+          {(routes) => (
+            routes
+              .filter(({ onlyAdmin }) => !onlyAdmin || (onlyAdmin && user.isAdmin))
+              .map(route => <Route key={route.path} {...route} />)
+          )}
+        </LazyRoutes>
       </main>
     </>
   )
 }
 
-DashboardLayout.propTypes = {
-  classes: t.object.isRequired,
-  width: t.string
-}
-
-export default compose(
-  withStyles(styles),
-  withWidth()
-)(DashboardLayout)
+export default DashboardLayout
