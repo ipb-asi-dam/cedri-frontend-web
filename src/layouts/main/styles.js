@@ -23,7 +23,9 @@ export default (theme) => ({
     }
   },
   mainContent: {
-    height: '70vh',
-    padding: 20
+    margin: '0 auto',
+    maxWidth: '80%',
+    padding: 20,
+    textAlign: 'justify'
   }
 })
