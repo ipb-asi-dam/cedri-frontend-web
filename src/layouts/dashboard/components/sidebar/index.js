@@ -1,7 +1,6 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import t from 'prop-types'
 import classNames from 'clsx'
-import withStyles from '@material-ui/core/styles/withStyles'
 import { Link } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar'
@@ -11,14 +10,16 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Typography from '@material-ui/core/Typography'
+import makeStyles from '@material-ui/core/styles/makeStyles'
 
-import { AuthContext } from 'contexts/auth'
 import styles from './styles'
 
 import NavLink from 'components/nav-link'
 
-function Sidebar ({ classes, className, onChangeRoute, routes }) {
-  const { userInfo } = useContext(AuthContext)
+const useStyles = makeStyles(styles)
+
+function Sidebar ({ className, onChangeRoute, routes, user }) {
+  const classes = useStyles()
   const rootClass = classNames(classes.root, className)
 
   return (
@@ -26,8 +27,7 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
       <List component='div' disablePadding>
         <ListItem
           className={classes.logoWrapper}
-          component={NavLink}
-          exact
+          component={Link}
           to='/'
         >
           CeDRI
@@ -36,23 +36,23 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
         <div className={classes.profile}>
           <Link to='/dashboard/account'>
             <Avatar
-              alt={userInfo.user.name}
+              alt={user.name}
               className={classes.avatar}
-              src={userInfo.user.user.avatar || '//via.placeholder.com/100'}
+              src={user.imageURL}
             />
           </Link>
           <Typography
             className={classes.nameText}
             variant='h6'
           >
-            {userInfo.user.name}
+            {user.name}
           </Typography>
-          {userInfo.user.occupation && (
+          {user.occupation && (
             <Typography
               className={classes.bioText}
               variant='caption'
             >
-              {userInfo.user.occupation}
+              {user.occupation}
             </Typography>
           )}
         </div>
@@ -66,7 +66,7 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
             component={NavLink}
             exact
             onClick={onChangeRoute(route.name)}
-            to={route.layout + route.path}
+            to={route.path}
           >
             <ListItemIcon className={classes.listItemIcon}>
               <route.icon />
@@ -83,10 +83,10 @@ function Sidebar ({ classes, className, onChangeRoute, routes }) {
 }
 
 Sidebar.propTypes = {
-  classes: t.object.isRequired,
   className: t.string,
   onChangeRoute: t.func.isRequired,
-  routes: t.array.isRequired
+  routes: t.array.isRequired,
+  user: t.object.isRequired
 }
 
-export default withStyles(styles)(Sidebar)
+export default Sidebar

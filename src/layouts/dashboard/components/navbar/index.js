@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import t from 'prop-types'
 import classNames from 'clsx'
 import { Link } from 'react-router-dom'
@@ -13,11 +13,8 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import CloseIcon from '@material-ui/icons/Close'
 import HomeIcon from '@material-ui/icons/HomeOutlined'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
-import LockIcon from '@material-ui/icons/LockOutlined'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
 import MenuIcon from '@material-ui/icons/Menu'
 
-import { AuthContext } from 'contexts/auth'
 import styles from './styles'
 
 function Navbar ({
@@ -29,7 +26,6 @@ function Navbar ({
   title
 }) {
   const rootClassName = classNames(classes.root, className)
-  const { changeUserRole, userInfo } = useContext(AuthContext)
 
   return (
     <div className={rootClassName}>
@@ -50,10 +46,6 @@ function Navbar ({
           <Link to='/'>
             <HomeIcon />
           </Link>
-        </IconButton>
-
-        <IconButton onClick={changeUserRole}>
-          {userInfo.user.isAdmin ? <LockOpenIcon /> : <LockIcon />}
         </IconButton>
 
         <IconButton className={classes.signOutButton} onClick={handleLogout}>
