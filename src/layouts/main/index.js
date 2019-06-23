@@ -1,13 +1,11 @@
 import React, { useCallback, useState } from 'react'
-import t from 'prop-types'
-// import classNames from 'clsx'
-import compose from 'recompose/compose'
 
 import Typography from '@material-ui/core/Typography'
 
 // MUI helpers
-import withStyles from '@material-ui/core/styles/withStyles'
-import withWidth from '@material-ui/core/withWidth'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useTheme from '@material-ui/core/styles/useTheme'
 
 // styles
 import styles from './styles'
@@ -16,40 +14,18 @@ import styles from './styles'
 import Drawer from './components/drawer'
 import Footer from './components/footer'
 import Navbar from './components/navbar'
-import Routes from './components/routes'
+import LazyRoutes from 'components/lazy-routes'
 
-const smBreakpoints = ['xs', 'sm', 'md']
+import routes from './routes.js'
 
-const navItems = [
-  {
-    title: 'About Us',
-    path: '/about-us'
-  },
-  {
-    title: 'Research & Innovation',
-    path: '/research-innovation'
-  },
-  {
-    title: 'Communication',
-    path: '/communication'
-  },
-  {
-    title: 'People',
-    path: '/people'
-  },
-  {
-    title: 'Outcomes',
-    path: '/outcomes'
-  },
-  {
-    title: 'Contacts',
-    path: '/contacts'
-  }
-]
+const useStyles = makeStyles(styles)
 
-function MainLayout ({ classes, width }) {
+function MainLayout () {
+  const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
   const [isOpen, toggleDrawer] = useState(false)
-  const isMobile = smBreakpoints.includes(width)
 
   const handleDrawerToggle = useCallback(() => toggleDrawer(!isOpen), [isOpen])
 
@@ -57,24 +33,22 @@ function MainLayout ({ classes, width }) {
     <div className={classes.app}>
       <Navbar
         isMobile={isMobile}
-        items={navItems}
+        items={routes}
         toggleDrawer={handleDrawerToggle}
       />
       <Drawer
         open={isOpen}
         onClose={handleDrawerToggle}
-        items={navItems}
+        items={routes}
       />
       <main className={classes.main}>
-        <div>
-          <div className={classes.header}>
-            <Typography color='inherit' variant='h1'>
-              Research Centre in Digitalization and Intelligent Robotics
-            </Typography>
-          </div>
+        <div className={classes.header}>
+          <Typography color='inherit' variant='h1'>
+            Research Centre in Digitalization and Intelligent Robotics
+          </Typography>
         </div>
         <div className={classes.mainContent}>
-          <Routes />
+          <LazyRoutes routes={routes} />
         </div>
       </main>
       <Footer />
@@ -82,12 +56,4 @@ function MainLayout ({ classes, width }) {
   )
 }
 
-MainLayout.propTypes = {
-  classes: t.object.isRequired,
-  width: t.string
-}
-
-export default compose(
-  withStyles(styles),
-  withWidth()
-)(MainLayout)
+export default MainLayout
