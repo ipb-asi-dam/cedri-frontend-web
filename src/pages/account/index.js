@@ -11,14 +11,14 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 import TextField from 'components/text-field'
-import TextFieldVisibility from 'components/text-field-visibility'
 
 // contexts
 import { AuthContext } from 'contexts/auth'
 import { SnackbarContext } from 'contexts/snackbar'
 
+import { email, required } from 'utils/validations'
+
 import useStyles from './styles'
-import { strongPassword, required, passwordLength } from 'utils/validations'
 
 function Account ({ history }) {
   const classes = useStyles()
@@ -28,15 +28,32 @@ function Account ({ history }) {
 
   const [isValid, setValid] = useState(false)
   const [isSubmitting, setSubmitting] = useState(false)
-  const [formData] = useState({ ...user })
   const imageRef = useRef()
+  const [liveImage, setLiveImage] = useState()
   const [image, setImage] = useState()
 
   function handleOnChangeImage (e) {
-    setImage(e.target.files[0])
+    e.persist()
+
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0])
+      const reader = new FileReader()
+
+      reader.onload = function (base64) {
+        setLiveImage(base64.target.result)
+      }
+
+      reader.readAsDataURL(e.target.files[0])
+    } else {
+      setLiveImage()
+    }
+
+    setValid(true)
   }
 
   async function onSubmit (data, errors) {
+    if (errors) return
+
     const content = new FormData()
 
     content.append('image', image)
@@ -62,11 +79,7 @@ function Account ({ history }) {
 
   return (
     <div className={classes.root}>
-      <Grid
-        container
-        justify='center'
-        spacing={4}
-      >
+      <Grid container justify='center' spacing={4}>
         <Paper style={{ padding: 20 }}>
           <div style={{ paddingBottom: 20 }}>
             <Typography variant='h4'>
@@ -74,11 +87,12 @@ function Account ({ history }) {
             </Typography>
           </div>
           <Form
-            data={formData}
+            data={{ ...user }}
             onChange={(_, errors) => setValid(Object.keys(errors).length === 0)}
             onSubmit={onSubmit}
-            validation={{
-              password: [required, passwordLength, strongPassword]
+            validations={{
+              name: required,
+              email: [required, email]
             }}
           >
             <Grid container spacing={3}>
@@ -86,9 +100,10 @@ function Account ({ history }) {
                 <Avatar
                   alt=''
                   className={classes.avatar}
-                  src={user.imageURL}
+                  src={liveImage || user.imageURL}
                 />
                 <input
+                  accept='image/gif, image/jpeg, image/png'
                   className={classes.avatarBtn}
                   onChange={handleOnChangeImage}
                   ref={imageRef}
@@ -101,6 +116,7 @@ function Account ({ history }) {
                   disabled={isSubmitting}
                   label='Name'
                   name='name'
+                  required
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -108,6 +124,7 @@ function Account ({ history }) {
                   disabled={isSubmitting}
                   label='Email'
                   name='email'
+                  required
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -122,14 +139,6 @@ function Account ({ history }) {
                   disabled={isSubmitting}
                   label='Bio'
                   name='bio'
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextFieldVisibility
-                  disabled={isSubmitting}
-                  label='Password'
-                  name='password'
-                  type='password'
                 />
               </Grid>
               <Divider />
