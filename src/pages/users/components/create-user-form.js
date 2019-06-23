@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
+import Avatar from '@material-ui/core/Avatar'
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
 
@@ -10,24 +11,93 @@ import RFTextField from 'components/text-field'
 // utils
 import { required, email } from 'utils/validations'
 
-function CreateUserForm ({ children, isSubmiting, onSubmit }) {
+function CreateUserForm ({
+  children,
+  classes,
+  data,
+  isEdit,
+  isSubmiting,
+  onSubmit
+}) {
+  data = Object.keys(data).length === 0
+    ? {
+      name: '',
+      email: '',
+      type: 'im',
+      isAdmin: false
+    }
+    : data
+
+  const imageURL = data.file
+    ? `${process.env.REACT_APP_API_URL}/public/images/${data.file.md5}`
+    : '//via.placeholder.com/100'
+
+  const imageRef = useRef()
+  const [liveImage, setLiveImage] = useState()
+  const [image, setImage] = useState()
+
+  function handleOnChangeImage (e) {
+    e.persist()
+
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0])
+      const reader = new FileReader()
+
+      reader.onload = function (base64) {
+        setLiveImage(base64.target.result)
+      }
+
+      reader.readAsDataURL(e.target.files[0])
+    } else {
+      setLiveImage()
+    }
+  }
+
+  function beforeSubmit (data, errors) {
+    if (errors) return
+
+    const content = new FormData()
+
+    content.append('image', image)
+
+    Object
+      .entries(data)
+      .forEach(([key, val]) => {
+        content.append(key, val)
+      })
+
+    return content
+  }
+
   return (
     <Form
       customErrorProp='error'
-      data={{
-        name: '',
-        email: '',
-        type: 'im',
-        isAdmin: false
-      }}
+      data={data}
       keepErrorOnFocus
-      onSubmit={onSubmit}
+      onSubmit={(data, errors) => {
+        onSubmit(beforeSubmit(data, errors), errors)
+      }}
       validation={{
         name: [required],
         email: [required, email]
       }}
     >
       <Grid container spacing={2}>
+        {isEdit && <Grid container justify='center' style={{ paddingBottom: 20 }}>
+          <Avatar
+            alt=''
+            className={classes.avatar}
+            src={liveImage || imageURL}
+          />
+          <input
+            accept='image/gif, image/jpeg, image/png'
+            className={classes.avatarBtn}
+            onChange={handleOnChangeImage}
+            ref={imageRef}
+            style={{ width: 100, height: 100 }}
+            type='file'
+          />
+        </Grid>}
         <Grid item xs={12}>
           <RFTextField
             autoFocus
@@ -75,6 +145,9 @@ function CreateUserForm ({ children, isSubmiting, onSubmit }) {
 
 CreateUserForm.propTypes = {
   children: PropTypes.node,
+  classes: PropTypes.object,
+  data: PropTypes.object,
+  isEdit: PropTypes.bool.isRequired,
   isSubmiting: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired
 }
