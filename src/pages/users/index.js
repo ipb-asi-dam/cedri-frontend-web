@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import axios from 'config/axios'
 
 import MUIDataTable from 'mui-datatables'
@@ -10,17 +9,20 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
-import withStyles from '@material-ui/core/styles/withStyles'
 
 import { ic_add as AddIcon } from 'react-icons-kit/md/ic_add'
 import { ic_delete as DeleteIcon } from 'react-icons-kit/md/ic_delete'
 import { ic_edit as EditIcon } from 'react-icons-kit/md/ic_edit'
+import { ic_unarchive as UnarchiveIcon } from 'react-icons-kit/md/ic_unarchive'
 
 import Icon from 'components/icon'
 import Avatar from './components/avatar'
 import CreateUserForm from './components/create-user-form'
 
-import styles from './styles'
+import { AuthContext } from 'contexts/auth'
+import { SnackbarContext } from 'contexts/snackbar'
+
+import useStyles from './styles'
 
 const columns = [
   {
@@ -28,20 +30,25 @@ const columns = [
     options: { display: 'excluded' }
   },
   {
-    name: 'avatar',
-    label: 'Avatar',
+    name: 'fileId',
     options: { display: 'excluded' }
   },
   {
     name: 'name',
     label: 'Name',
     options: {
-      customBodyRender: (value, tableMeta) => (
-        <Avatar
-          src={tableMeta.rowData[1] || '//via.placeholder.com/36'}
-          userName={value}
-        />
-      )
+      customBodyRender: (value, tableMeta) => {
+        const imageURL = tableMeta.rowData[1]
+          ? `${process.env.REACT_APP_API_URL}/public/images/${tableMeta.rowData[1]}`
+          : '//via.placeholder.com/36'
+
+        return (
+          <Avatar
+            src={imageURL}
+            userName={value}
+          />
+        )
+      }
     }
   },
   { name: 'email', label: 'Email' },
@@ -51,7 +58,8 @@ const columns = [
     options: {
       customBodyRender: (value) => value ? 'Yes' : 'No'
     }
-  }
+  },
+  { name: 'deletedAt', options: { display: 'excluded' } }
 ]
 
 const options = {
@@ -60,64 +68,152 @@ const options = {
   print: false,
   responsive: 'scroll',
   rowsPerPage: 5,
-  rowsPerPageOptions: [5, 10, 15]
+  rowsPerPageOptions: [5],
+  selectableRows: 'none'
 }
 
-function Users ({ classes }) {
+const MODE_ADD = 'ADD'
+const MODE_EDIT = 'EDIT'
+
+function Users () {
+  const classes = useStyles()
+  const { userInfo: { user }, updateUserInfo } = useContext(AuthContext)
+  const { showNotification } = useContext(SnackbarContext)
+
   const [isSubmiting, setSubmiting] = useState(false)
   const [isOpen, handleDialog] = useState(false)
-  const [tableData, setData] = useState([])
+  const [tableData, setTableData] = useState([])
+  const [formData, setFormData] = useState({})
+  const [count, setCount] = useState(0)
+  const [page, setPage] = useState(0)
+  const [lastPage, setLastPage] = useState(0)
+  const [mode, setMode] = useState(MODE_ADD)
 
   const openForm = useCallback(() => handleDialog(true), [])
-  const closeForm = useCallback(() => handleDialog(false), [])
+  const closeForm = useCallback(() => {
+    handleDialog(false)
+    setFormData({})
+  }, [])
 
-  const updateData = useCallback((data) => {
-    const { id, name, isAdmin, user: { avatar, email } } = data
-    setData([
-      [id, avatar, name, email, isAdmin],
+  const getUsers = useCallback(async () => {
+    try {
+      const response = await axios.get(`/private/users?page=${page === 0 ? 1 : page}&limit=5`)
+      setTableData(response.data.data.elements
+        .map(({ id, name, isAdmin, file, email, deletedAt }) => {
+          const fileId = file ? file.md5 : null
+          return [id, fileId, name, email, isAdmin, deletedAt]
+        }))
+      setCount(response.data.data.countTotal)
+      setLastPage(response.data.data.pagesTotal)
+    } catch (e) {
+      showNotification(e.message)
+    }
+  }, [page, showNotification])
+
+  const fetchData = useCallback(async (id) => {
+    try {
+      const response = await axios.get(`/private/users/${id}`)
+      setFormData(response.data.data)
+      openForm()
+    } catch (e) {
+      showNotification(e.message)
+    }
+  }, [openForm, showNotification])
+
+  function onChangePage (currentPage) {
+    if ((currentPage + 1) > lastPage) return
+
+    setPage(currentPage === 0 ? 2 : currentPage + 1)
+    getUsers()
+  }
+
+  const handleClick = () => {
+    setMode(MODE_ADD)
+    openForm()
+  }
+
+  const addRow = useCallback((data) => {
+    const { id, name, isAdmin, file: { md5: fileId }, email } = data
+    setTableData([
+      [id, fileId, name, email, isAdmin],
       ...tableData
     ])
   }, [tableData])
 
-  const submitForm = useCallback(async (data, errors) => {
+  const editRow = useCallback((id) => {
+    setMode(MODE_EDIT)
+    fetchData(id)
+  }, [fetchData])
+
+  const updateRow = useCallback((data) => {
+    if (data.id === user.id) {
+      updateUserInfo(data.id)
+    }
+
+    setTableData((tableData) => {
+      return tableData.map((row) => {
+        if (row[0] !== data.id) return row
+
+        const { id, name, isAdmin, file, email, deletedAt } = data
+        const fileId = file ? file.md5 : null
+
+        return [id, fileId, name, email, isAdmin, deletedAt]
+      })
+    })
+  }, [updateUserInfo, user.id])
+
+  const onSubmit = useCallback(async (data, errors) => {
     if (errors !== undefined) return
+
+    const method = mode === MODE_ADD ? 'post' : 'put'
 
     try {
       setSubmiting(true)
-      const user = await axios.post('/private/users', data)
-      updateData(user.data.data)
+      const response = await axios[method](
+        `/private/users/${mode === MODE_EDIT ? formData.id : ''}`,
+        data
+      )
+
+      if (mode === MODE_ADD) {
+        addRow(response.data.data)
+        showNotification('User added successfully')
+      } else {
+        updateRow(response.data.data)
+        showNotification('User updated successfully')
+      }
+    } catch (e) {
+      showNotification(e.message)
     } finally {
       setSubmiting(false)
       closeForm()
     }
-  }, [closeForm, updateData])
+  }, [addRow, closeForm, formData.id, mode, showNotification, updateRow])
 
   const deleteRow = async (id) => {
     try {
-      if (window.confirm('Do you really want to delete this user?')) {
+      if (window.confirm('Do you really want to archive this user?')) {
         await axios.delete(`/private/users/${id}`)
-        setData(tableData.filter(([userId]) => id !== userId))
+        setTableData((tableData) => tableData.filter(([userId]) => id !== userId))
+        showNotification('User archived successfully!')
       }
-    } catch {
+    } catch (e) {
+      showNotification(e.message)
+    }
+  }
 
+  async function unarchiveUser (id) {
+    try {
+      const response = await axios.post(`/private/users/${id}/undelete`)
+      updateRow(response.data.data)
+      showNotification('User unarchived successfully!')
+    } catch (e) {
+      showNotification(e.message)
     }
   }
 
   useEffect(() => {
-    async function fetchData () {
-      try {
-        const response = await axios.get('/private/users')
-        setData(response.data.data
-          .map(({ id, name, isAdmin, user: { avatar, email } }) => (
-            [id, avatar, name, email, isAdmin]
-          )))
-      } catch {
-
-      }
-    }
-
-    fetchData()
-  }, [])
+    getUsers()
+  }, [getUsers, page, showNotification])
 
   return (
     <>
@@ -125,9 +221,12 @@ function Users ({ classes }) {
         <DialogTitle>Create an user</DialogTitle>
         <DialogContent>
           <CreateUserForm
+            classes={classes}
+            data={formData}
+            isEdit={mode === MODE_EDIT}
             isSubmiting={isSubmiting}
-            onSubmit={submitForm}
-            setData={updateData}
+            onSubmit={onSubmit}
+            setData={addRow}
           >
             <DialogActions>
               <Button onClick={closeForm} color='primary'>
@@ -144,7 +243,7 @@ function Users ({ classes }) {
       <div className={classes.toolbar}>
         <Button
           color='primary'
-          onClick={openForm}
+          onClick={handleClick}
           variant='outlined'
         >
           Add <Icon icon={AddIcon} />
@@ -160,29 +259,42 @@ function Users ({ classes }) {
             label: 'Actions',
             options: {
               search: false,
-              customBodyRender: (_, tableMeta) => (
-                <>
-                  <IconButton>
-                    <Icon icon={EditIcon} />
-                  </IconButton>
-                  <IconButton onClick={() => deleteRow(tableMeta.rowData[0])}>
-                    <Icon icon={DeleteIcon} />
-                  </IconButton>
-                </>
-              )
+              sort: false,
+              customBodyRender: (_, tableMeta) => {
+                if (!tableMeta.rowData) return
+                return tableMeta.rowData && !tableMeta.rowData[5]
+                  ? (
+                    <>
+                      <IconButton onClick={() => editRow(tableMeta.rowData[0])}>
+                        <Icon icon={EditIcon} />
+                      </IconButton>
+                      {tableMeta.rowData[0] !== user.id && (
+                        <IconButton onClick={() => deleteRow(tableMeta.rowData[0])}>
+                          <Icon icon={DeleteIcon} />
+                        </IconButton>
+                      )}
+                    </>
+                  )
+                  : (
+                    <IconButton onClick={() => unarchiveUser(tableMeta.rowData[0])}>
+                      <Icon icon={UnarchiveIcon} />
+                    </IconButton>
+                  )
+              }
             }
           }
         ]}
         data={tableData}
-        options={options}
+        options={{
+          ...options,
+          count,
+          onChangePage,
+          page
+        }}
         title='Users'
       />
     </>
   )
 }
 
-Users.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-
-export default withStyles(styles)(Users)
+export default Users
