@@ -22,15 +22,13 @@ function renderNestedRoutes (routes, first = true) {
 
   return (
     <Wrapper {...wrapperProps}>
-      <Switch>
-        {routes.map(({ routes: nestedRoutes = [], ...route }) => (
-          <React.Fragment key={route.path}>
-            {nestedRoutes.length > 0
-              ? renderNestedRoutes(nestedRoutes, false)
-              : renderRoute(route)}
-          </React.Fragment>
-        ))}
-      </Switch>
+      {routes.map(({ routes: nestedRoutes = [], ...route }) => (
+        <React.Fragment key={route.path}>
+          {nestedRoutes.length > 0
+            ? renderNestedRoutes(nestedRoutes, false)
+            : renderRoute(route)}
+        </React.Fragment>
+      ))}
     </Wrapper>
   )
 }
