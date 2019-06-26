@@ -122,7 +122,7 @@ function Posts () {
   const [count, setCount] = useState(0)
   const [page, setPage] = useState(0)
   const [lastPage, setLastPage] = useState(0)
-  const [selectedForm, setSelectedForm] = useState('project')
+  const [selectedForm, setSelectedForm] = useState('award')
   const [form, setForm] = useState(getForm(selectedForm))
   const [allowedResources, setAllowedResources] = useState([])
 
