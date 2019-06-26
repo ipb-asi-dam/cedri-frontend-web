@@ -5,7 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 
 import 'react-quill/dist/quill.snow.css'
 
-function TextEditor ({ disabled, value, ...props }) {
+function TextEditor ({ disabled, value, withImage, ...props }) {
   const { name, label } = props
 
   return (
@@ -18,7 +18,7 @@ function TextEditor ({ disabled, value, ...props }) {
         modules={{
           toolbar: [
             ['bold', 'italic'],
-            ['link']
+            ['link', ...withImage && ['image']]
           ]
         }}
         placeholder='Type here your text'
@@ -32,7 +32,8 @@ function TextEditor ({ disabled, value, ...props }) {
 
 TextEditor.defaultProps = {
   disabled: false,
-  value: ''
+  value: '',
+  withImage: false
 }
 
 TextEditor.propTypes = {
@@ -40,7 +41,8 @@ TextEditor.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func,
-  value: PropTypes.any
+  value: PropTypes.any,
+  withImage: PropTypes.bool
 }
 
 export default TextEditor
