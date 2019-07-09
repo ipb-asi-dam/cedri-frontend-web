@@ -1,42 +1,61 @@
 import makeStyles from '@material-ui/core/styles/makeStyles'
 
 const styles = (theme) => ({
-  button: {
-    marginTop: theme.spacing(4),
-    textTransform: 'uppercase',
-    width: '60%'
+  root: {
+    backgroundColor: theme.palette.background.default,
+    height: '100vh'
   },
-  card: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    padding: '3.2rem'
+  grid: {
+    height: '100%'
   },
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#4369ab',
+  content: {
+    height: '100%',
     display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
+    flexDirection: 'column'
+  },
+  contentBody: {
+    flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center'
   },
-  flex: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    width: '20rem'
-  },
-  link: {
-    color: '#0767db',
-    fontSize: theme.spacing(1.5),
-    marginTop: theme.spacing(1),
-    textDecoration: 'none',
-    '&.forget-password': {
-      alignSelf: 'flex-end',
-      fontSize: theme.spacing(1.8)
+  form: {
+    paddingLeft: '100px',
+    paddingRight: '100px',
+    paddingBottom: '125px',
+    flexBasis: '700px',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     }
+  },
+  title: {
+    marginTop: theme.spacing(3)
+  },
+  fields: {
+    marginTop: theme.spacing(2)
+  },
+  textField: {
+    width: '100%',
+    '& + & ': {
+      marginTop: theme.spacing(2)
+    }
+  },
+  signInButton: {
+    marginTop: theme.spacing(2),
+    width: '100%'
+  },
+  signUp: {
+    color: theme.palette.text.secondary,
+    marginTop: theme.spacing(2),
+    textAlign: 'center'
+  },
+  url: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none'
+  },
+  alignRight: {
+    textAlign: 'right'
   }
 })
 

@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react'
 
-import Paper from '@material-ui/core/Paper'
-import Slide from '@material-ui/core/Slide'
-
 import { AuthContext } from 'contexts/auth'
 import { SnackbarContext } from 'contexts/snackbar'
+
+import Grid from '@material-ui/core/Grid'
 
 import LoginForm from './components/form'
 import Submitting from 'components/submitting'
@@ -32,9 +31,9 @@ function Login () {
   }
 
   return (
-    <div className={classes.container}>
-      <Slide direction='right' in mountOnEnter unmountOnExit>
-        <Paper className={classes.card} elevation={3}>
+    <div className={classes.root}>
+      <Grid className={classes.grid} container>
+        <Grid className={classes.content} item xs={12}>
           {isSubmitting && <Submitting />}
           {!isSubmitting && (
             <LoginForm
@@ -45,8 +44,8 @@ function Login () {
               setValid={setValid}
             />
           )}
-        </Paper>
-      </Slide>
+        </Grid>
+      </Grid>
     </div>
   )
 }
