@@ -2,17 +2,15 @@ import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'config/axios'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Paper from '@material-ui/core/Paper'
-import Slide from '@material-ui/core/Slide'
+import Grid from '@material-ui/core/Grid'
 
 import { SnackbarContext } from 'contexts/snackbar'
 
+import RecoverPasswordForm from './components/form'
+import Submitting from 'components/submitting'
 import TimeoutRedirect from 'components/timeout-redirect'
 import TextField from 'components/text-field'
 import TextFieldVisibility from 'components/text-field-visibility'
-
-import RecoverPasswordForm from './components/form'
 
 import { email, passwordLength, required, strongPassword } from 'utils/validations'
 
@@ -66,6 +64,7 @@ function RecoverPassword ({ location }) {
       {queryParam && (
         <TextFieldVisibility
           autoFocus
+          className={classes.textField}
           disabled={isSubmitting}
           label='New Password'
           margin='normal'
@@ -76,6 +75,7 @@ function RecoverPassword ({ location }) {
         <TextField
           autoComplete='email'
           autoFocus
+          className={classes.textField}
           disabled={isSubmitting}
           label='Email'
           margin='normal'
@@ -86,20 +86,15 @@ function RecoverPassword ({ location }) {
   )
 
   return (
-    <div className={classes.container}>
-      <Slide in mountOnEnter unmountOnExit>
-        <Paper className={classes.card} elevation={3}>
+    <div className={classes.root}>
+      <Grid className={classes.grid} container justify='center'>
+        <Grid className={classes.content} item xs={12}>
           {wasSent && (
             <TimeoutRedirect>
               Your request was sent, please check your email.
             </TimeoutRedirect>
           )}
-          {(isSubmitting && !wasSent) && (
-            <>
-              <h2>Sending request...</h2>
-              <CircularProgress color='secondary' size={48} />
-            </>
-          )}
+          {(isSubmitting && !wasSent) && <Submitting />}
           {(!isSubmitting && !wasSent) && (
             <RecoverPasswordForm
               children={formsChildren}
@@ -112,8 +107,8 @@ function RecoverPassword ({ location }) {
               validation={validation}
             />
           )}
-        </Paper>
-      </Slide>
+        </Grid>
+      </Grid>
     </div>
   )
 }
