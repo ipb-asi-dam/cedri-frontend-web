@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
 
@@ -28,44 +29,40 @@ function PatentForm ({
       onSubmit={onSubmit}
       validation={{
         authors: required,
-        patentNumbers: required,
+        patentNumbersHtml: required,
         title: required
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             autoFocus
             disabled={isSubmiting}
             label='Title'
-            margin='normal'
             name='title'
+            required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             disabled={isSubmiting}
             label='Authors'
-            margin='normal'
             name='authors'
-            placeholder='The authors must be separated by comma'
+            required
           />
         </Grid>
         <Grid item xs={12}>
           <TextEditor
             disabled={isSubmiting}
             label='Patent Numbers'
-            name='patentNumbers'
+            name='patentNumbersHtml'
+            required
           />
         </Grid>
       </Grid>
       {children}
     </Form>
   )
-}
-
-PatentForm.defaultProps = {
-  data: {}
 }
 
 PatentForm.propTypes = {

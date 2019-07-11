@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-
+/*
 import Icon from 'components/icon'
 import { facebook as FacebookIcon } from 'react-icons-kit/fa/facebook'
 import { twitter as TwitterIcon } from 'react-icons-kit/fa/twitter'
 import { youtube as YouTubeIcon } from 'react-icons-kit/fa/youtube'
 import { ic_mail as EmailIcon } from 'react-icons-kit/md/ic_mail'
 import { ic_smartphone as PhoneIcon } from 'react-icons-kit/md/ic_smartphone'
+*/
 
 // assets
 import IPBLogo from 'assets/ipb.png'
@@ -26,7 +27,7 @@ function Footer ({ classes }) {
           <img alt='IPB' src={IPBLogo} />
         </div>
       </div>
-      <div className={classes.secondLine}>
+      {/* <div className={classes.secondLine}>
         <div className='contacts'>
           <div>
             <a href='tel:+351273303200'>
@@ -50,7 +51,7 @@ function Footer ({ classes }) {
             <Icon icon={YouTubeIcon} />
           </a>
         </div>
-      </div>
+      </div> */}
     </footer>
   )
 }

@@ -18,7 +18,7 @@ function TextEditor ({ disabled, value, withImage, ...props }) {
         modules={{
           toolbar: [
             ['bold', 'italic'],
-            ['link', ...withImage && ['image']]
+            ['link', ...(withImage || '') && ['image'], 'video']
           ]
         }}
         placeholder='Type here your text'

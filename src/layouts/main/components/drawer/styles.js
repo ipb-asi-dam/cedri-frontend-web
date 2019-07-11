@@ -1,4 +1,6 @@
-export default (theme) => ({
+import makeStyles from '@material-ui/core/styles/makeStyles'
+
+const styles = (theme) => ({
   drawerPaper: {
     width: '271px',
     zIndex: 1200,
@@ -23,3 +25,5 @@ export default (theme) => ({
     fontSize: `${theme.spacing(2.5)}px`
   }
 })
+
+export default makeStyles(styles)

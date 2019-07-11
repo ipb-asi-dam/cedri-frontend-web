@@ -1,3 +1,4 @@
 import React from 'react'
+import Container from 'layouts/main/components/container'
 
-export default () => <h1>Outcomes</h1>
+export default (props) => <Container rootPath='/outcomes' {...props} />

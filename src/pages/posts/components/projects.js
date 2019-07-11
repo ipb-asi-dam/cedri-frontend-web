@@ -1,17 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid'
+
 import Form from 'react-vanilla-form'
+import Grid from '@material-ui/core/Grid'
 
 // components
+import Checkbox from 'components/checkbox'
 import RFTextField from 'components/text-field'
 
 // utils
 import { checkDate, required, url } from 'utils/validations'
 import format from 'date-fns/format'
-
-const minDate = format(new Date(2000, 0), 'YYYY-MM-DD')
-const dateProps = { min: minDate }
 
 function ProjectsForm ({
   children,
@@ -20,10 +19,19 @@ function ProjectsForm ({
   onSubmit,
   setValid
 }) {
-  data = Object.keys(data).length === 0 ? {
-    type: 'international',
-    isAccepted: true
-  } : data
+  const [image, setImage] = useState()
+
+  function handleOnImageChange (e) {
+    setImage(e.target.files[0])
+  }
+
+  data = {
+    ...data,
+    endDate: format((data.endDate || new Date()), 'YYYY-MM'),
+    isAccepted: data.isAccepted || true,
+    startDate: format((data.startDate || new Date()), 'YYYY-MM'),
+    type: data.type || 'international'
+  }
 
   return (
     <Form
@@ -31,30 +39,42 @@ function ProjectsForm ({
       data={data}
       keepErrorOnFocus
       onChange={(_, errors) => {
-        if (!Object.keys(errors).length) setValid(true)
+        setValid(Boolean(!Object.keys(errors).length))
       }}
-      onSubmit={onSubmit}
+      onSubmit={(data, errors) => {
+        const content = new FormData()
+
+        content.append('image', image)
+
+        Object
+          .entries(data)
+          .forEach(([key, val]) => {
+            content.append(key, val)
+          })
+
+        onSubmit(content, errors)
+      }}
       validation={{
-        consortium: [required],
         description: [required],
-        endDate: [required],
+        endDate: [
+          required,
+          checkDate
+        ],
         fundedBy: [required],
         startDate: [
           required,
-          checkDate(data.startDate, data.endDate)
+          checkDate
         ],
         title: [required],
         type: [required],
-        url: [url]
+        webPage: [url]
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
-            autoFocus
             disabled={isSubmiting}
             label='Title'
-            margin='normal'
             name='title'
             required
           />
@@ -63,27 +83,22 @@ function ProjectsForm ({
           <RFTextField
             disabled={isSubmiting}
             label='Description'
-            margin='normal'
+            multiline
             name='description'
             required
+            rows={3}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Consortium'
+            multiline
             name='consortium'
-            required
+            rows={3}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='URL'
-            name='url'
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Funded by'
@@ -91,24 +106,29 @@ function ProjectsForm ({
             required
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12} md={6}>
           <RFTextField
-            inputProps={dateProps}
+            disabled={isSubmiting}
+            label='Web page'
+            name='webPage'
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <RFTextField
             disabled={isSubmiting}
             label='Start Date'
             name='startDate'
-            type='date'
+            type='month'
             required
             shrink
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={6}>
           <RFTextField
-            inputProps={dateProps}
             disabled={isSubmiting}
             label='End Date'
             name='endDate'
-            type='date'
+            type='month'
             required
             shrink
           />
@@ -121,7 +141,6 @@ function ProjectsForm ({
             required
             select
             SelectProps={{ native: true }}
-            shrink
           >
             {[
               { label: 'International', value: 'international' },
@@ -135,13 +154,21 @@ function ProjectsForm ({
           </RFTextField>
         </Grid>
         <Grid item xs={12} md={6}>
-          <label htmlFor='isAccepted'>
-            <input type='checkbox' name='isAccepted' />
-            Approved?
-          </label>
+          <RFTextField
+            label='Image'
+            onChange={handleOnImageChange}
+            shrink
+            type='file'
+          />
         </Grid>
+        <Grid item xs={12}>
+          <Checkbox
+            label='Approved?'
+            name='isAccepted'
+          />
+        </Grid>
+        {children}
       </Grid>
-      {children}
     </Form>
   )
 }

@@ -1,15 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid'
+
 import Form from 'react-vanilla-form'
+import Grid from '@material-ui/core/Grid'
 
 // components
 import RFTextField from 'components/text-field'
 
 // utils
 import { required } from 'utils/validations'
-import InputLabel from '@material-ui/core/InputLabel'
-import InputBase from '@material-ui/core/InputBase'
 
 function SoftwareForm ({
   children,
@@ -18,7 +17,6 @@ function SoftwareForm ({
   onSubmit,
   setValid
 }) {
-  const imageRef = useRef()
   const [image, setImage] = useState()
 
   function handleOnChangeImage (e) {
@@ -57,7 +55,6 @@ function SoftwareForm ({
             autoFocus
             disabled={isSubmiting}
             label='Title'
-            margin='normal'
             name='title'
             required
           />
@@ -66,7 +63,6 @@ function SoftwareForm ({
           <RFTextField
             disabled={isSubmiting}
             label='Description'
-            margin='normal'
             multiline
             name='description'
             required
@@ -74,10 +70,11 @@ function SoftwareForm ({
           />
         </Grid>
         <Grid item xs={12}>
-          <InputLabel>Image</InputLabel>
-          <InputBase
+          <RFTextField
+            disabled={isSubmiting}
+            label='Image'
             onChange={handleOnChangeImage}
-            ref={imageRef}
+            shrink
             type='file'
           />
         </Grid>

@@ -1,9 +1,12 @@
-export default (theme) => ({
+import makeStyles from '@material-ui/core/styles/makeStyles'
+
+const styles = (theme) => ({
   container: {
-    display: 'flex',
-    justifyContent: 'flex-end'
+    display: 'block',
+    width: '100%'
   },
   button: {
+    height: theme.spacing(5),
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
     textTransform: 'uppercase',
@@ -19,3 +22,5 @@ export default (theme) => ({
     }
   }
 })
+
+export default makeStyles(styles)

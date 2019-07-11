@@ -6,17 +6,33 @@ import MuiDrawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import withStyles from '@material-ui/core/styles/withStyles'
 
 import NavLink from 'components/nav-link'
 
-import styles from './styles'
+import useStyles from './styles'
 
-function Drawer ({ classes, items, ...props }) {
+function Drawer ({ items, ...props }) {
+  const classes = useStyles()
+
+  const onClickLink = () => props.onClose()
+
   return (
     <MuiDrawer classes={{ paper: classes.drawerPaper }} {...props}>
       <List component='nav' disablePadding>
-        {items.map(({ title, path }) => (
+        <ListItem
+          activeClassName={classes.itemActiveItem}
+          className={classes.drawerItem}
+          component={NavLink}
+          exact
+          to='/'
+        >
+          <ListItemText
+            classes={{ primary: classes.drawerItemText }}
+            onClick={onClickLink}
+            primary={'Home'}
+          />
+        </ListItem>
+        {items.map(({ title, path }) => title && (
           <ListItem
             key={path}
             activeClassName={classes.itemActiveItem}
@@ -27,6 +43,7 @@ function Drawer ({ classes, items, ...props }) {
           >
             <ListItemText
               classes={{ primary: classes.drawerItemText }}
+              onClick={onClickLink}
               primary={title}
             />
           </ListItem>
@@ -37,8 +54,8 @@ function Drawer ({ classes, items, ...props }) {
 }
 
 Drawer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  items: PropTypes.arrayOf(String)
+  items: PropTypes.arrayOf(String),
+  onClose: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(Drawer)
+export default Drawer

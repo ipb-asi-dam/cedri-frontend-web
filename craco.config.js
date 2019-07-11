@@ -7,16 +7,6 @@ const paths = {
   src: join(__dirname, 'src')
 }
 
-const override = {
-  development: {
-    'react-dom': '@hot-loader/react-dom'
-  },
-  production: {
-    react: 'preact/compat',
-    'react-dom': 'preact/compat'
-  }
-}
-
 const alias = {
   src: paths.src,
   assets: join(paths.src, 'assets'),
@@ -27,14 +17,10 @@ const alias = {
   pages: join(paths.src, 'pages'),
   services: join(paths.src, 'services'),
   theme: join(paths.src, 'theme'),
-  utils: join(paths.src, 'utils'),
-  ...override[process.env.NODE_ENV]
+  utils: join(paths.src, 'utils')
 }
 
 module.exports = {
-  babel: {
-    plugins: ['react-hot-loader/babel']
-  },
   eslint: {
     configure: {
       extends: [

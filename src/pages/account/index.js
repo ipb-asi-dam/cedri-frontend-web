@@ -67,7 +67,7 @@ function Account ({ history }) {
     try {
       setSubmitting(true)
       await axios.put(`/private/users/${user.id}`, content)
-      await updateUserInfo(user.id)
+      await updateUserInfo()
       showNotification('User successfully updated')
       setSubmitting(false)
     } catch {

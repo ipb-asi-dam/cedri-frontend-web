@@ -1,6 +1,7 @@
 import isBefore from 'date-fns/is_before'
 import toDate from 'validator/lib/toDate'
 import isEmail from 'validator/lib/isEmail'
+import isEqual from 'date-fns/is_equal'
 import isLength from 'validator/lib/isLength'
 import isURL from 'validator/lib/isURL'
 import matches from 'validator/lib/matches'
@@ -17,16 +18,10 @@ export function isDate (value) {
     : null
 }
 
-export function checkDate (prev, current) {
-  function inner () {
-    return !prev && !current
-      ? null
-      : isBefore(prev, current)
-        ? null
-        : 'Invalid date'
-  }
-
-  return inner
+export function checkDate (_, { endDate, startDate }) {
+  return isBefore(startDate, endDate) || isEqual(startDate, endDate)
+    ? null
+    : 'Invalid date'
 }
 
 export function strongPassword (value) {

@@ -19,7 +19,7 @@ function AwardForm ({
 }) {
   data = {
     ...data,
-    date: format(data.date, 'YYYY-MM')
+    date: format((data.date || new Date()), 'YYYY-MM')
   }
 
   return (
@@ -33,30 +33,29 @@ function AwardForm ({
       onSubmit={onSubmit}
       validation={{
         date: required,
+        event: required,
         prizeWinners: required,
         title: required
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
-            autoFocus
             disabled={isSubmiting}
             label='Title'
-            margin='normal'
             name='title'
             required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             disabled={isSubmiting}
             label='Event'
-            margin='normal'
             name='event'
+            required
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Publication Date'
@@ -66,7 +65,7 @@ function AwardForm ({
             shrink
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Address'

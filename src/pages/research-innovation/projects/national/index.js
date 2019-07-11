@@ -1,3 +1,17 @@
 import React from 'react'
 
-export default () => <h1>National</h1>
+import Pagination from 'layouts/main/components/pagination'
+import Project from 'pages/research-innovation/components/project'
+
+export default () => (
+  <Pagination
+    apiEntrypoint={`/public/projects/national`}
+    render={(proj, index, arr) => (
+      <Project
+        isLast={(index + 1) < arr.length}
+        key={proj.id}
+        {...proj}
+      />
+    )}
+  />
+)

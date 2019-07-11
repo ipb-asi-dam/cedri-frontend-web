@@ -1,24 +1,76 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
 
 import Grid from '@material-ui/core/Grid'
 
 import { bus as BusIcon } from 'react-icons-kit/fa/bus'
 import { plane as PlaneIcon } from 'react-icons-kit/fa/plane'
+import { facebook as FacebookIcon } from 'react-icons-kit/fa/facebook'
+import { twitter as TwitterIcon } from 'react-icons-kit/fa/twitter'
+import { youtube as YouTubeIcon } from 'react-icons-kit/fa/youtube'
 
 import Icon from 'components/icon'
+import Typography from '@material-ui/core/Typography'
+
+import logoIPB from 'assets/images/ipb.png'
+import logoCeDRI from 'assets/images/logo_rodape.png'
 
 function Contacts () {
   return (
-    <Grid container justify='center' spacing={3}>
-      <Grid>
-        <h1>Directions</h1>
-      </Grid>
-      <Grid container style={{ margin: '0 24px' }}>
+    <>
+      <br />
+
+      <Grid container justify='space-between'>
         <Grid item xs={12} md={6}>
+          <img alt='' src={logoCeDRI} />
+          <br />
           <p>
-            <Icon icon={PlaneIcon} /> By plane
+            Centro de Investigação em Digitalização e Robótica Inteligente<br />
+            Escola Superior de Tecnologia e Gestão<br />
+            Instituto Politécnico de Bragança<br />
+            Campus de Santa Apolónia<br />
+            5300-253 Bragança<br />
+            Portugal
           </p>
+          <p />
+
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <a
+            href='http://www.ipb.pt'
+            rel='noopener noreferrer'
+            target='_blank'
+            title='Instituto Politécnico de Bragança'
+          >
+            <img alt='' src={logoIPB} />
+          </a>
+          <br />
+          <p>phone: (+351)273303200</p>
+          <p>e-mail: <a href='mailto:cedri@ipb.pt'>cedri@ipb.pt</a></p>
+          <p>
+            <a href='https://www.facebook.com/cedri.ipb.pt/' rel='noopener noreferrer' target='_blank' title='Facebook'>
+              <Icon icon={FacebookIcon} />
+            </a>&nbsp;&nbsp;
+            <a href='https://twitter.com/cedri_ipb' rel='noopener noreferrer' target='_blank' title='Twitter'>
+              <Icon icon={TwitterIcon} />
+            </a>&nbsp;&nbsp;
+            <a href='https://www.youtube.com/channel/UC-gSrKGgTiir3YlpqeBM3dg' rel='noopener noreferrer' title='Youtube' target='_blank'>
+              <Icon icon={YouTubeIcon} />
+            </a>
+          </p>
+        </Grid>
+      </Grid>
+
+      <br />
+
+      <Typography variant='h2'>
+        Directions
+      </Typography>
+
+      <br />
+
+      <Grid container justify='space-between'>
+        <Grid item xs={12} md={6}>
+          <p><Icon icon={PlaneIcon} /> By plane</p>
           <p>
             The nearest airport is <a href='https://www.aeroportoporto.pt/' rel='noopener noreferrer' target='_blank'>Porto Airport (OPO)</a> (211 Km).
           </p>
@@ -44,7 +96,6 @@ function Contacts () {
             Schedules available at: <a href='https://www.rede-expressos.pt/' rel='noopener noreferrer' target='_blank'>www.rede-expressos.pt</a>
           </p>
           <p>Tel.: <a href='tel:+351217524524'>+351 217 524 524</a></p>
-          <br />
           <p>Santos/Rodonorte Schedules available at: <a href='http://www.santosviagensturismo.pt' rel='noopener noreferrer'
             target='_blank'>www.santosviagensturismo.pt</a>
           </p>
@@ -64,7 +115,7 @@ function Contacts () {
           title='Estig'
         />
       </Grid>
-    </Grid>
+    </>
   )
 }
 

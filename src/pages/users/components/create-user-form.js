@@ -29,7 +29,7 @@ function CreateUserForm ({
     : data
 
   const imageURL = data.file
-    ? `${process.env.REACT_APP_API_URL}/public/images/${data.file.md5}`
+    ? `${process.env.REACT_APP_API_URL}/public/files/${data.file.md5}`
     : '//via.placeholder.com/100'
 
   const imageRef = useRef()
@@ -79,7 +79,8 @@ function CreateUserForm ({
       }}
       validation={{
         name: [required],
-        email: [required, email]
+        email: [required, email],
+        type: required
       }}
     >
       <Grid container spacing={2}>
@@ -118,6 +119,7 @@ function CreateUserForm ({
             disabled={isSubmiting}
             label='Type'
             name='type'
+            required
             select
             SelectProps={{ native: true }}
           >

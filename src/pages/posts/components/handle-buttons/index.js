@@ -3,17 +3,19 @@ import PropTypes from 'prop-types'
 
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import withStyles from '@material-ui/core/styles/withStyles'
 
-import styles from './styles'
+import useStyles from './styles'
 
-function HandleButtons ({ classes, disabled, isSubmiting }) {
+function HandleButtons ({ disabled, isSubmiting }) {
+  const classes = useStyles()
+
   return (
     <div className={classes.container}>
       <Button
         className={classes.button}
         color='primary'
         disabled={disabled}
+        fullWidth
         type='submit'
         variant='contained'
       >
@@ -34,9 +36,8 @@ HandleButtons.defaultProps = {
 }
 
 HandleButtons.propTypes = {
-  classes: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   isSubmiting: PropTypes.bool
 }
 
-export default withStyles(styles)(HandleButtons)
+export default HandleButtons

@@ -4,9 +4,13 @@ import format from 'date-fns/format'
 import axios from 'config/axios'
 
 import MUIDataTable from 'mui-datatables'
+
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Typography from '@material-ui/core/Typography'
 
 import { ic_add as AddIcon } from 'react-icons-kit/md/ic_add'
 import { ic_delete as DeleteIcon } from 'react-icons-kit/md/ic_delete'
@@ -18,6 +22,7 @@ import TextField from 'components/text-field'
 
 import { AuthContext } from 'contexts/auth'
 import { SnackbarContext } from 'contexts/snackbar'
+import { ThemeContext } from 'contexts/theme'
 
 import FormDialog from 'layouts/dashboard/components/form-dialog'
 
@@ -91,7 +96,7 @@ const forms = {
     onlyAdmin: false,
     apiRoute: '/private/software'
   },
-  'theses': {
+  'thesis': {
     component: lazy(() => import('./components/thesis')),
     onlyAdmin: false,
     apiRoute: '/private/theses'
@@ -111,6 +116,7 @@ function Posts () {
 
   const { userInfo: { user } } = useContext(AuthContext)
   const { showNotification } = useContext(SnackbarContext)
+  const { isMobile } = useContext(ThemeContext)
 
   const [mode, setMode] = useState('ADD')
   const [formData, setFormData] = useState({})
@@ -119,7 +125,7 @@ function Posts () {
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, handleDialog] = useState(false)
   const [tableData, setTableData] = useState([])
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(1)
   const [page, setPage] = useState(0)
   const [lastPage, setLastPage] = useState(0)
   const [selectedForm, setSelectedForm] = useState('award')
@@ -132,12 +138,13 @@ function Posts () {
     setSelectedForm(value)
     setForm(getForm(value))
     setTableData([])
+    setPage(1)
   }
 
   const fetchPosts = useCallback(async () => {
     try {
       setIsLoading(true)
-      const response = await axios.get(`${form.apiRoute}?page=${page === 0 ? 1 : page}&limit=5`)
+      const response = await axios.get(`${form.apiRoute}?page=${page}&limit=5`)
       setCount(response.data.data.countTotal)
       setLastPage(response.data.data.pagesTotal)
       setTableData(response.data.data.elements)
@@ -151,8 +158,10 @@ function Posts () {
   function onChangePage (currentPage) {
     if ((currentPage + 1) > lastPage) return
 
-    setPage(currentPage === 0 ? 2 : currentPage + 1)
-    fetchPosts()
+    setPage(() => {
+      fetchPosts()
+      return currentPage + 1
+    })
   }
 
   const handleClick = (e) => {
@@ -187,7 +196,8 @@ function Posts () {
       { id, title, author, createdAt },
       ...tableData
     ])
-  }, [])
+    setCount(count + 1)
+  }, [count])
 
   const editRow = useCallback((data) => {
     setTableData(tableData => (
@@ -207,16 +217,16 @@ function Posts () {
   }
 
   const deleteRow = useCallback((id) => async () => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm('Are you sure?')) return
+    if (!window.confirm('Are you sure?')) return
 
     try {
       await axios.delete(`${form.apiRoute}/${id}`)
       setTableData(tableData => tableData.filter(row => row.id !== id))
+      setCount(count - 1)
     } catch {
       showNotification('There was an error during the post deleting')
     }
-  }, [form.apiRoute, showNotification])
+  }, [count, form.apiRoute, showNotification])
 
   const submitForm = useCallback(async (data, errors) => {
     if (errors !== undefined) return setFormValid(false)
@@ -265,13 +275,10 @@ function Posts () {
       >
         <Suspense fallback={<LinearProgress />}>
           <form.component
-            closeForm={closeForm}
             data={formData}
+            isMobile={isMobile}
             isSubmiting={isSubmittingForm}
-            isValid={isFormValid}
             onSubmit={submitForm}
-            setFormData={setFormData}
-            setSubmiting={setSubmittingForm}
             setValid={setFormValid}
           >
             <HandleButtons
@@ -282,32 +289,34 @@ function Posts () {
         </Suspense>
       </FormDialog>
 
-      <div className={classes.toolbar}>
-        <TextField
-          color='primary'
-          disabled={isLoading || isSubmittingForm}
-          name='form'
-          onChange={handleSelectForm}
-          select
-          SelectProps={{ native: true }}
-          value={selectedForm}
-        >
-          {allowedResources.map(([key]) => (
-            <option key={key} value={key}>
-              {toTitleCase(key)}
-            </option>
-          ))}
-        </TextField>
-
-        <Button
-          color='primary'
-          disabled={isLoading || isSubmittingForm}
-          onClick={handleClick}
-          variant='outlined'
-        >
-          Add <Icon icon={AddIcon} />
-        </Button>
-      </div>
+      <Grid container spacing={2} className={classes.toolbar}>
+        <Grid item xs={9}>
+          <TextField
+            disabled={isLoading || isSubmittingForm}
+            onChange={handleSelectForm}
+            select
+            SelectProps={{ native: true }}
+            value={selectedForm}
+          >
+            {allowedResources.map(([key]) => (
+              <option key={key} value={key}>
+                {toTitleCase(key)}
+              </option>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item xs={3}>
+          <Button
+            color='primary'
+            disabled={isLoading || isSubmittingForm}
+            fullWidth
+            onClick={handleClick}
+            variant='outlined'
+          >
+            Add <Icon icon={AddIcon} />
+          </Button>
+        </Grid>
+      </Grid>
 
       <MUIDataTable
         data={tableData}
@@ -317,7 +326,14 @@ function Posts () {
           onChangePage,
           page
         }}
-        title='Posts'
+        title={(
+          <div style={{ display: 'flex' }}>
+            <Typography style={{ marginRight: 12 }}>
+              Posts of {selectedForm}
+            </Typography>
+            {isLoading && <CircularProgress size={24} />}
+          </div>
+        )}
         columns={[
           ...columns,
           {
@@ -342,9 +358,7 @@ function Posts () {
             }
           }
         ]}
-      >
-        {isLoading && <LinearProgress />}
-      </MUIDataTable>
+      />
     </>
   )
 }

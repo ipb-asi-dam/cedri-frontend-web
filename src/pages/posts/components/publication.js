@@ -8,6 +8,7 @@ import RFTextField from 'components/text-field'
 
 // utils
 import { required, url } from 'utils/validations'
+import format from 'date-fns/format'
 
 function PublicationForm ({
   children,
@@ -16,6 +17,12 @@ function PublicationForm ({
   onSubmit,
   setValid
 }) {
+  data = {
+    ...data,
+    date: format((data.date || new Date()), 'YYYY'),
+    type: data.type || 'b'
+  }
+
   return (
     <Form
       customErrorProp='error'
@@ -27,34 +34,32 @@ function PublicationForm ({
       onSubmit={onSubmit}
       validation={{
         authors: [required],
+        date: [required],
         sourceTitle: [required],
         title: [required],
         type: [required],
-        url: [required, url],
-        year: [required]
+        url: [required, url]
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             autoFocus
             disabled={isSubmiting}
             label='Title'
-            margin='normal'
             name='title'
             required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <RFTextField
             disabled={isSubmiting}
             label='Authors'
-            margin='normal'
             name='authors'
             required
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12}>
           <RFTextField
             disabled={isSubmiting}
             label='URL'
@@ -62,75 +67,18 @@ function PublicationForm ({
             required
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='DOI'
-            name='doi'
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Issue'
-            name='issue'
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Indexed'
-            name='indexed'
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Source Title'
-            name='sourceTitle'
-            required
-          />
-        </Grid>
-        <Grid item xs={6} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Start Page'
-            name='startPage'
-          />
-        </Grid>
-        <Grid item xs={6} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='End Page'
-            name='endPage'
-          />
-        </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={6}>
           <RFTextField
             disabled={isSubmiting}
             inputProps={{ min: 1990, max: new Date().getFullYear() }}
             label='Year'
-            name='year'
+            name='date'
             type='number'
             shrink
             required
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Volume'
-            name='volume'
-          />
-        </Grid>
-        <Grid item xs={6} sm={4}>
-          <RFTextField
-            disabled={isSubmiting}
-            label='Art. Nº'
-            name='artNumber'
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Type'
@@ -153,16 +101,67 @@ function PublicationForm ({
             ))}
           </RFTextField>
         </Grid>
+        <Grid item xs={12}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Source Title'
+            name='sourceTitle'
+            required
+          />
+        </Grid>
+        <Grid item xs={6} md={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='DOI'
+            name='doi'
+          />
+        </Grid>
+        <Grid item xs={6} md={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Issue'
+            name='issue'
+          />
+        </Grid>
+        <Grid item xs={6} md={4}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Indexed'
+            name='indexed'
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Start Page'
+            name='startPage'
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='End Page'
+            name='endPage'
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Volume'
+            name='volume'
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <RFTextField
+            disabled={isSubmiting}
+            label='Art. Nº'
+            name='artNumber'
+          />
+        </Grid>
       </Grid>
       {children}
     </Form>
   )
-}
-
-PublicationForm.defaultProps = {
-  data: {
-    type: 'b'
-  }
 }
 
 PublicationForm.propTypes = {

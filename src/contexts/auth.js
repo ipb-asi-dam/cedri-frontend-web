@@ -19,7 +19,9 @@ function Auth ({ children }) {
     isAuthenticated: isAuthenticated()
   })
 
-  const updateUserInfo = useCallback(async (id) => {
+  const { id } = getTokenContent() || {}
+
+  const updateUserInfo = useCallback(async () => {
     const response = await axios.get(`/private/users/${id}`)
     const { file: _file, ...user } = response.data.data
     const file = _file || {}
@@ -28,28 +30,25 @@ function Auth ({ children }) {
       ...userInfo,
       user: {
         ...user,
-        ...file,
         imageURL: file.id
-          ? `${process.env.REACT_APP_API_URL}/public/images/${file.md5}`
+          ? `${process.env.REACT_APP_API_URL}/public/files/${file.md5}`
           : '//via.placeholder.com/100'
       }
     }))
-  }, [])
+  }, [id])
 
   const login = useCallback(async (data) => {
     try {
       const res = await axios.post('/public/authenticate', data)
       loginService(res.data.data.token)
       setUserInfo({
-        user: {
-          id: getTokenContent().id
-        },
+        user: { id },
         isAuthenticated: isAuthenticated()
       })
     } catch (err) {
       showNotification('Error during login, please try again!')
     }
-  }, [showNotification])
+  }, [id, showNotification])
 
   const logout = useCallback(() => {
     logoutService()

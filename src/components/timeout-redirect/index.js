@@ -3,35 +3,51 @@ import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 
-function TimeoutRedirect ({ children, to, variant }) {
+import useStyles from './styles'
+
+function TimeoutRedirect ({
+  children,
+  to,
+  mainVariant,
+  secondaryVariant
+}) {
+  const classes = useStyles()
   const [timeRemaining, setTimeRemaining] = useState(5)
 
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       setTimeRemaining((state) => state - 1)
     }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
   return timeRemaining > 0
     ? (
-      <Typography variant={variant}>
-        <Typography variant={variant}>
+      <div className={classes.container}>
+        <Typography variant={secondaryVariant}>
           {children}
         </Typography>
-        You'll be redirected in {timeRemaining}s
-      </Typography>
+        <Typography variant={mainVariant}>
+          You'll be redirected in {timeRemaining}s
+        </Typography>
+      </div>
     ) : <Redirect to={to} />
 }
 
 TimeoutRedirect.defaultProps = {
   to: '/login',
-  variant: 'h5'
+  mainVariant: 'h5',
+  secondaryVariant: 'h4'
 }
 
 TimeoutRedirect.propTypes = {
   children: PropTypes.node.isRequired,
   to: PropTypes.string,
-  variant: PropTypes.string
+  mainVariant: PropTypes.string,
+  secondaryVariant: PropTypes.string
 }
 
 export default TimeoutRedirect

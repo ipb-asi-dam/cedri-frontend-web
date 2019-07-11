@@ -3,47 +3,57 @@ import PropTypes from 'prop-types'
 
 import NavLink from 'components/nav-link'
 
+import { formatDateProject, getImageURL } from 'utils'
+
 function Project ({
   consortium,
   description,
-  duration,
+  endDate,
+  file,
   fundedBy,
-  image,
-  name,
-  webpage
+  title,
+  startDate,
+  webPage,
+  isLast
 }) {
   return (
     <>
-      {image && <p><img src={image} className='img-fluid' alt='Mathe' /></p>}
-      <h3>{name}</h3>
+      {file && <p><img alt='' src={getImageURL(file)} /></p>}
+      <h3>{title}</h3>
       <p>{description}</p>
-      <p><strong>Funded by:</strong>{fundedBy}</p>
-      <p><strong>Consortium:</strong>{consortium}</p>
-      <p><strong>Duration:</strong>{duration}</p>
-      {webpage && (
+      <p><strong>Funded by: </strong>{fundedBy}</p>
+      {consortium && <p><strong>Consortium: </strong>{consortium}</p>}
+      <p><strong>Duration: </strong>{formatDateProject(startDate, endDate)}</p>
+      {webPage && (
         <p>
-          <strong>Web page:</strong>
-          <NavLink to={webpage} rel='noopener noreferrer' target='_blank'>
-            {webpage}
+          <strong>Web page: </strong>
+          <NavLink to={webPage} rel='noopener noreferrer' target='_blank'>
+            {webPage}
           </NavLink>
         </p>
       )}
       <p />
       <br />
-      <hr />
-      <br />
+      {isLast && (
+        <>
+          <hr />
+          <br />
+        </>
+      )}
     </>
   )
 }
 
 Project.propTypes = {
-  consortium: PropTypes.string.isRequired,
+  consortium: PropTypes.string,
   description: PropTypes.string.isRequired,
-  duration: PropTypes.string.isRequired,
+  endDate: PropTypes.string.isRequired,
+  file: PropTypes.object,
   fundedBy: PropTypes.string.isRequired,
-  image: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  webpage: PropTypes.string
+  isLast: PropTypes.bool,
+  startDate: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  webPage: PropTypes.string
 }
 
 export default Project

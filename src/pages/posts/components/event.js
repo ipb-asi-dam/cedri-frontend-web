@@ -11,10 +11,6 @@ import TextEditor from 'components/text-editor'
 import { checkDate, required } from 'utils/validations'
 import format from 'date-fns/format'
 
-const minDate = format(new Date(2000, 0), 'YYYY-MM-DD')
-
-const dateProps = { min: minDate }
-
 function EventForm ({
   children,
   data,
@@ -22,23 +18,33 @@ function EventForm ({
   onSubmit,
   setValid
 }) {
+  data = {
+    ...data,
+    startDate: format((data.startDate || new Date()), 'YYYY-MM-DD'),
+    endDate: format((data.endDate || new Date()), 'YYYY-MM-DD')
+  }
+
   return (
     <Form
       customErrorProp='error'
       data={data}
       keepErrorOnFocus
       onChange={(_, errors) => {
-        if (!Object.keys(errors).length) setValid(true)
+        setValid(Boolean(!Object.keys(errors).length))
       }}
       onSubmit={onSubmit}
       validation={{
         address: required,
-        endDate: required,
-        links: required,
+        endDate: [
+          required,
+          checkDate
+        ],
+        linksHtml: required,
         startDate: [
           required,
-          checkDate(data.startDate, data.endDate)
-        ]
+          checkDate
+        ],
+        title: required
       }}
     >
       <Grid container spacing={2}>
@@ -59,9 +65,8 @@ function EventForm ({
             required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={6}>
           <RFTextField
-            inputProps={dateProps}
             disabled={isSubmiting}
             label='Start Date'
             name='startDate'
@@ -70,10 +75,9 @@ function EventForm ({
             type='date'
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={6}>
           <RFTextField
             disabled={isSubmiting}
-            inputProps={dateProps}
             label='End Date'
             name='endDate'
             required
@@ -85,7 +89,7 @@ function EventForm ({
           <TextEditor
             disabled={isSubmiting}
             label='Links'
-            name='links'
+            name='linksHtml'
             required
           />
         </Grid>
@@ -93,10 +97,6 @@ function EventForm ({
       {children}
     </Form>
   )
-}
-
-EventForm.defaultProps = {
-  data: {}
 }
 
 EventForm.propTypes = {

@@ -1,4 +1,6 @@
-export default (theme) => ({
+import makeStyles from '@material-ui/core/styles/makeStyles'
+
+const styles = (theme) => ({
   topbar: {
     position: 'fixed',
     width: '100%',
@@ -34,3 +36,5 @@ export default (theme) => ({
     marginLeft: '270px'
   }
 })
+
+export default makeStyles(styles)

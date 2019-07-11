@@ -7,17 +7,20 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 
-function ProfileCard ({ classes, data, navigate }) {
+import useStyles from './styles'
+
+function ProfileCard ({ data, navigate }) {
+  const classes = useStyles()
+
   return (
     <Card className={classes.card}>
       <CardActionArea onClick={navigate(data)}>
-        <CardMedia
-          component='img'
+        {data.image && <CardMedia
           className={classes.media}
-          image={data.image}
-          height='140'
+          component='img'
+          src={data.image}
           title={`${data.title} profile photo`}
-        />
+        />}
         <CardContent>
           <Typography
             className={classes.cardTitle}
@@ -27,7 +30,7 @@ function ProfileCard ({ classes, data, navigate }) {
           >
             {data.title}
           </Typography>
-          <Typography component='p'>
+          <Typography align='left' component='p'>
             {data.subtitle}
           </Typography>
         </CardContent>
@@ -36,12 +39,7 @@ function ProfileCard ({ classes, data, navigate }) {
   )
 }
 
-ProfileCard.defaultProps = {
-  classes: {}
-}
-
 ProfileCard.propTypes = {
-  classes: PropTypes.object,
   data: PropTypes.object.isRequired,
   navigate: PropTypes.func.isRequired
 }

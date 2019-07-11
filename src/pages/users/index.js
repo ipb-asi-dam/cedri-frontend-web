@@ -39,7 +39,7 @@ const columns = [
     options: {
       customBodyRender: (value, tableMeta) => {
         const imageURL = tableMeta.rowData[1]
-          ? `${process.env.REACT_APP_API_URL}/public/images/${tableMeta.rowData[1]}`
+          ? `${process.env.REACT_APP_API_URL}/public/files/${tableMeta.rowData[1]}`
           : '//via.placeholder.com/36'
 
         return (
@@ -97,7 +97,7 @@ function Users () {
 
   const getUsers = useCallback(async () => {
     try {
-      const response = await axios.get(`/private/users?page=${page === 0 ? 1 : page}&limit=5`)
+      const response = await axios.get(`/private/users?page=${page}&limit=5`)
       setTableData(response.data.data.elements
         .map(({ id, name, isAdmin, file, email, deletedAt }) => {
           const fileId = file ? file.md5 : null
@@ -123,8 +123,10 @@ function Users () {
   function onChangePage (currentPage) {
     if ((currentPage + 1) > lastPage) return
 
-    setPage(currentPage === 0 ? 2 : currentPage + 1)
-    getUsers()
+    setPage(() => {
+      getUsers()
+      return currentPage + 1
+    })
   }
 
   const handleClick = () => {
@@ -147,7 +149,7 @@ function Users () {
 
   const updateRow = useCallback((data) => {
     if (data.id === user.id) {
-      updateUserInfo(data.id)
+      updateUserInfo()
     }
 
     setTableData((tableData) => {

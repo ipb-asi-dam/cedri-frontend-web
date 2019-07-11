@@ -4,25 +4,20 @@ import TextField from '@material-ui/core/TextField'
 
 function RFTextField ({
   children,
-  disabled,
   error,
   inputProps,
   required,
   shrink,
-  title,
   value,
   ...props
 }) {
   return (
     <TextField
       error={Boolean(error)}
-      fullWidth
       helperText={error}
-      InputProps={{ inputProps }}
       InputLabelProps={{ required, shrink }}
-      disabled={disabled}
-      label={title}
-      value={value || ''}
+      InputProps={{ inputProps }}
+      {...props.type !== 'file' && { value: value || '' }}
       {...props}
     >
       {children}
@@ -32,6 +27,7 @@ function RFTextField ({
 
 RFTextField.defaultProps = {
   disabled: false,
+  fullWidth: true,
   required: false,
   shrink: undefined,
   type: 'text',
@@ -43,11 +39,10 @@ RFTextField.propTypes = {
   disabled: PropTypes.bool,
   error: PropTypes.string,
   inputProps: PropTypes.object,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   onChange: PropTypes.func,
   required: PropTypes.bool,
   shrink: PropTypes.bool,
-  title: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,

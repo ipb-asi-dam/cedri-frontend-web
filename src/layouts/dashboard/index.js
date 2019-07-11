@@ -5,11 +5,6 @@ import classNames from 'clsx'
 // MUI components
 import Drawer from '@material-ui/core/Drawer'
 
-// MUI helpers
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import useTheme from '@material-ui/core/styles/useTheme'
-
 // core components
 import Header from './components/navbar'
 import Sidebar from './components/sidebar'
@@ -17,20 +12,19 @@ import LazyRoutes from 'components/lazy-routes'
 
 // contexts
 import { AuthContext } from 'contexts/auth'
+import { ThemeContext } from 'contexts/theme'
 
 // styles
-import styles from './styles'
+import useStyles from './styles'
 
 import routes from './routes'
 
-const useStyles = makeStyles(styles)
-
 function DashboardLayout () {
   const classes = useStyles()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const { logout, updateUserInfo, userInfo: { user } } = useContext(AuthContext)
+  const { isMobile } = useContext(ThemeContext)
+
   const [filteredRoutes, setRoutes] = useState(routes)
   const [currentRoute, setRoute] = useState({ name: 'Home' })
   const [isOpen, toggleDrawer] = useState(true)
@@ -40,18 +34,16 @@ function DashboardLayout () {
   const applyShift = isOpen && !isMobile
 
   useEffect(() => {
-    (async () => {
-      await updateUserInfo(user.id)
-    })()
-
+    updateUserInfo()
     setRoutes(routes
       .filter(({ onlyAdmin }) => !onlyAdmin || (onlyAdmin && user.isAdmin)))
-  }, [updateUserInfo, user.id, user.isAdmin])
+  }, [updateUserInfo, user.isAdmin])
 
   const handleRouteChange = useCallback((name) => () => {
     window.scrollTo(0, 0)
     setRoute({ name })
-  }, [])
+    handleDrawerToggle()
+  }, [handleDrawerToggle])
 
   return (
     <>

@@ -5,9 +5,13 @@ const styles = (theme) => ({
     maxHeight: 300
   },
   toolbar: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
+    '& button': {
+      height: '100%'
+    }
+  },
+  root: {
+    color: theme.palette.primary
   },
   dialog: {
     padding: theme.spacing(4)

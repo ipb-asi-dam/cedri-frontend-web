@@ -1,14 +1,12 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import classnames from 'clsx'
+import PropTypes from 'prop-types'
 
+// MUI
 import Typography from '@material-ui/core/Typography'
 
-// MUI helpers
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import useTheme from '@material-ui/core/styles/useTheme'
-
 // styles
-import styles from './styles'
+import useStyles from './styles'
 
 // components
 import Drawer from './components/drawer'
@@ -17,20 +15,23 @@ import Navbar from './components/navbar'
 import LazyRoutes from 'components/lazy-routes'
 
 import routes from './routes.js'
+import { ThemeContext } from 'contexts/theme'
 
-const useStyles = makeStyles(styles)
-
-function MainLayout () {
+function MainLayout ({ location }) {
   const classes = useStyles()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const { isMobile } = useContext(ThemeContext)
 
   const [isOpen, toggleDrawer] = useState(false)
+  const [showHeader, setShowHeader] = useState(false)
 
   const handleDrawerToggle = useCallback(() => toggleDrawer(!isOpen), [isOpen])
 
+  useEffect(() => {
+    setShowHeader(location.pathname === '/')
+  }, [location])
+
   return (
-    <div className={classes.app}>
+    <div className={classnames(classes.app, classes.flexColumn)}>
       <Navbar
         isMobile={isMobile}
         items={routes}
@@ -42,11 +43,13 @@ function MainLayout () {
         items={routes}
       />
       <main className={classes.main}>
-        <div className={classes.header}>
-          <Typography color='inherit' variant='h1'>
-            Research Centre in Digitalization and Intelligent Robotics
-          </Typography>
-        </div>
+        {showHeader && (
+          <div className={classes.header}>
+            <Typography color='inherit' variant='h1'>
+              Research Centre in Digitalization and Intelligent Robotics
+            </Typography>
+          </div>
+        )}
         <div className={classes.mainContent}>
           <LazyRoutes routes={routes} />
         </div>
@@ -54,6 +57,10 @@ function MainLayout () {
       <Footer />
     </div>
   )
+}
+
+MainLayout.propTypes = {
+  location: PropTypes.object.isRequired
 }
 
 export default MainLayout

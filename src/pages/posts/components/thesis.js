@@ -4,10 +4,12 @@ import Grid from '@material-ui/core/Grid'
 import Form from 'react-vanilla-form'
 
 // components
+import Checkbox from 'components/checkbox'
 import RFTextField from 'components/text-field'
 
 // utils
 import { required } from 'utils/validations'
+import format from 'date-fns/format'
 
 function ThesisForm ({
   children,
@@ -16,11 +18,12 @@ function ThesisForm ({
   onSubmit,
   setValid
 }) {
-  data = Object.keys(data).length === 0 ? {
+  data = {
     ...data,
-    type: 'msc',
-    completed: false
-  } : data
+    date: format((data.date || new Date()), 'YYYY-MM'),
+    type: data.type || 'msc',
+    completed: data.completed
+  }
 
   return (
     <Form
@@ -47,7 +50,6 @@ function ThesisForm ({
             autoFocus
             disabled={isSubmiting}
             label='Title'
-            margin='normal'
             name='title'
             required
           />
@@ -56,7 +58,6 @@ function ThesisForm ({
           <RFTextField
             disabled={isSubmiting}
             label='Grade'
-            margin='normal'
             name='grade'
             required
           />
@@ -65,7 +66,6 @@ function ThesisForm ({
           <RFTextField
             disabled={isSubmiting}
             label='Student Name'
-            margin='normal'
             name='student'
             required
           />
@@ -74,16 +74,14 @@ function ThesisForm ({
           <RFTextField
             disabled={isSubmiting}
             label='Institute'
-            margin='normal'
             name='institute'
             required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Type'
-            margin='normal'
             name='type'
             required
             select
@@ -94,34 +92,30 @@ function ThesisForm ({
             <option value='phd'>PhD</option>
           </RFTextField>
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={6}>
           <RFTextField
             disabled={isSubmiting}
             label='Date'
-            margin='normal'
             name='date'
-            type='month'
+            required
             shrink
+            type='month'
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12}>
           <RFTextField
             disabled={isSubmiting}
             label='Supervisors'
-            margin='normal'
             name='supervisors'
             required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <label htmlFor='completed'>
-            <input
-              disabled={isSubmiting}
-              type='checkbox'
-              name='completed'
-            />
-            Completed?
-          </label>
+        <Grid item xs={12}>
+          <Checkbox
+            disabled={isSubmiting}
+            label='Completed?'
+            name='completed'
+          />
         </Grid>
       </Grid>
       {children}
